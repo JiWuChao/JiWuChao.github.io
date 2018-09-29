@@ -1,4 +1,4 @@
-http://www.wuchao.net.cn/2018/09/29/线程同步方法和问题已经解决方案/
+http://www.wuchao.net.cn/2018/09/29/线程同步方法和问题以及解决方案/
 http://www.wuchao.net.cn/2018/08/15/数据结构笔记—两个有序链表合并成一个有序链表/
 http://www.wuchao.net.cn/2018/08/14/数据结构笔记-线性表/
 http://www.wuchao.net.cn/2018/08/13/数据结构笔记—栈和队列/

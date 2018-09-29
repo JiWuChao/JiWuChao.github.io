@@ -1,0 +1,1591 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="数据结构," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="老JI" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="图的定义和基本术语图的知识图谱 图&amp;emsp;Graph=(V,E)  V：顶点(数据元素)的有穷非空集合,和 E：边的有穷集合组成 有向图：每条边都是有方向的 无向图： 每条边都是无方向的 完全图：任意两个点都有一条边相连 稀疏图：有很少边或弧的图。 稠密图：有较多边或弧的图。 网：边/弧带权的图。 邻接：有边/弧相连的两个顶点之间的关系。            存在(vi, vj)，则称vi和">
+<meta name="keywords" content="数据结构">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据结构笔记—图">
+<meta property="og:url" content="http://www.wuchao.net.cn/2018/08/12/数据结构笔记—图/index.html">
+<meta property="og:site_name" content="老JI">
+<meta property="og:description" content="图的定义和基本术语图的知识图谱 图&amp;emsp;Graph=(V,E)  V：顶点(数据元素)的有穷非空集合,和 E：边的有穷集合组成 有向图：每条边都是有方向的 无向图： 每条边都是无方向的 完全图：任意两个点都有一条边相连 稀疏图：有很少边或弧的图。 稠密图：有较多边或弧的图。 网：边/弧带权的图。 邻接：有边/弧相连的两个顶点之间的关系。            存在(vi, vj)，则称vi和">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/7/26/164d72d46a3e4705?w=1304&h=686&f=png&s=144994">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/7/26/164d7401eb75216a?w=1368&h=504&f=png&s=110462">
+<meta property="og:updated_time" content="2018-09-29T07:50:37.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="数据结构笔记—图">
+<meta name="twitter:description" content="图的定义和基本术语图的知识图谱 图&amp;emsp;Graph=(V,E)  V：顶点(数据元素)的有穷非空集合,和 E：边的有穷集合组成 有向图：每条边都是有方向的 无向图： 每条边都是无方向的 完全图：任意两个点都有一条边相连 稀疏图：有很少边或弧的图。 稠密图：有较多边或弧的图。 网：边/弧带权的图。 邻接：有边/弧相连的两个顶点之间的关系。            存在(vi, vj)，则称vi和">
+<meta name="twitter:image" content="https://user-gold-cdn.xitu.io/2018/7/26/164d72d46a3e4705?w=1304&h=686&f=png&s=144994">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://www.wuchao.net.cn/2018/08/12/数据结构笔记—图/"/>
+
+
+
+
+
+  <title>数据结构笔记—图 | 老JI</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+		<!--添加右上角的github图标 2018年08月18日13:27:37 -->
+	
+		<!-- <a href="https://github.com/JiWuChao" class="github-corner" aria-label="View source on Github"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#fff; color:#151513; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+ -->
+
+
+		<a href="https://github.com/JiWuChao" class="github-corner" aria-label="View source on Github"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">老JI</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">The transformation from ordinary to extraordinary will not occur overnight !</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-top">
+          <a href="/top/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-signal"></i> <br />
+            
+            阅读排行
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.wuchao.net.cn/2018/08/12/数据结构笔记—图/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="老JI">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="老JI">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">数据结构笔记—图</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-12T14:47:57+08:00">
+                2018-08-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/数据结构/" itemprop="url" rel="index">
+                    <span itemprop="name">数据结构</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/08/12/数据结构笔记—图/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2018/08/12/数据结构笔记—图/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2018/08/12/数据结构笔记—图/" class="leancloud_visitors" data-flag-title="数据结构笔记—图">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  4,810
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  21
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="图的定义和基本术语"><a href="#图的定义和基本术语" class="headerlink" title="图的定义和基本术语"></a>图的定义和基本术语</h2><h3 id="图的知识图谱"><a href="#图的知识图谱" class="headerlink" title="图的知识图谱"></a>图的知识图谱</h3><p><img src="https://user-gold-cdn.xitu.io/2018/7/26/164d72d46a3e4705?w=1304&amp;h=686&amp;f=png&amp;s=144994" alt=""></p>
+<h4 id="图"><a href="#图" class="headerlink" title="图"></a>图</h4><p>&emsp;Graph=(V,E)<br>  V：顶点(数据元素)的有穷非空集合,和 E：边的有穷集合组成</p>
+<p><strong>有向图</strong>：每条边都是有方向的</p>
+<p><strong>无向图</strong>： 每条边都是无方向的</p>
+<p><strong>完全图</strong>：任意两个点都有一条边相连</p>
+<p><strong>稀疏图</strong>：有很少边或弧的图。</p>
+<p><strong>稠密图</strong>：有较多边或弧的图。</p>
+<p><strong>网</strong>：边/弧带权的图。</p>
+<p><strong>邻接</strong>：有边/弧相连的两个顶点之间的关系。<br>            存在(vi, vj)，则称vi和vj互为邻接点；<br>              存在&lt;vi, vj&gt;，则称vi邻接到vj， vj邻接于vi </p>
+<p><strong>关联(依附)</strong>：边/弧与顶点之间的关系。<br>            存在(vi, vj)/ &lt;vi, vj&gt;， 则称该边/弧关联于vi和vj</p>
+<p><strong>顶点的度</strong>：与该顶点相关联的边的数目，记为TD(v)。在有向图中, 顶点的度等于该顶点的入度与出度之和。<br>顶点 v 的入度是以 v 为终点的有向边的条数, 记作 ID(v)<br>顶点 v 的出度是以 v 为始点的有向边的条数, 记作OD(v)</p>
+<p><strong>路径</strong>：接续的边构成的顶点序列。</p>
+<p><strong>路径长度</strong>：路径上边或弧的数目/权值之和。</p>
+<p><strong>回路(环)</strong>：第一个顶点和最后一个顶点相同的路径。<br>1<br><strong>简单路径</strong>：顶点不重复出现的路径。</p>
+<p><strong>简单回路(简单环)</strong>：除路径起点和终点相同外，其余顶点均不相同的路径。</p>
+<p><strong>连通图（强连通图）</strong> 在无（有）向图G=( V, {E} )中，若对任何两个顶点 v、u 都存在从v 到 u 的路径，则称G是连通图（强连通图）。</p>
+<p><strong>权与网</strong> 图中边或弧所具有的相关数称为权。表明从一个顶点到另一个顶点的距离或耗费。带权的图称为网。</p>
+<p><strong>子图</strong> 设有两个图G=（V，{E}）、G1=（V1，{E1}），若V1包含于 V，E1 包含于 E，则称 G1是G的子图。</p>
+<h2 id="图的存储结构"><a href="#图的存储结构" class="headerlink" title="图的存储结构"></a>图的存储结构</h2><h3 id="顺序存储结构："><a href="#顺序存储结构：" class="headerlink" title="顺序存储结构："></a>顺序存储结构：</h3><p>&emsp;数组表示法（邻接矩阵）</p>
+<h4 id="邻接矩阵表示法的特点"><a href="#邻接矩阵表示法的特点" class="headerlink" title="邻接矩阵表示法的特点"></a>邻接矩阵表示法的特点</h4><p><strong>优点</strong>：容易实现图的操作，如：求某顶点的度、判断顶点之间是否有边、找顶点的邻接点等等。</p>
+<p><strong>缺点</strong>：n个顶点需要n*n个单元存储边;空间效率为O(n2)。 对稀疏图而言尤其浪费空间。</p>
+<h3 id="链式存储结构："><a href="#链式存储结构：" class="headerlink" title="链式存储结构："></a>链式存储结构：</h3><h4 id="邻接表表示法的特点"><a href="#邻接表表示法的特点" class="headerlink" title="邻接表表示法的特点"></a>邻接表表示法的特点</h4><p><strong>优点</strong>：空间效率高，容易寻找顶点的邻接点；</p>
+<p><strong>缺点</strong>：判断两顶点间是否有边或弧，需搜索两结点对应的单链表，没有邻接矩阵方便。</p>
+<p>多重链表</p>
+<ol>
+<li><p>邻接表:</p>
+</li>
+<li><p>邻接多重表:</p>
+</li>
+<li>十字链表:</li>
+</ol>
+<h3 id="邻接矩阵与邻接表表示法的关系"><a href="#邻接矩阵与邻接表表示法的关系" class="headerlink" title="邻接矩阵与邻接表表示法的关系"></a>邻接矩阵与邻接表表示法的关系</h3><p><strong>联系</strong>：邻接表中每个链表对应于邻接矩阵中的一行，链表中结点个数等于一行中非零元素的个数。</p>
+<p><strong>区别</strong>：</p>
+<p>① 对于任一确定的无向图，邻接矩阵是唯一的（行列号与顶点编号一致），但邻接表不唯一（链接次序与顶点编号无关）。</p>
+<p>② 邻接矩阵的空间复杂度为O(n2),而邻接表的空间复杂度为O(n+e)。</p>
+<p><strong>用途</strong>：邻接矩阵多用于稠密图；而邻接表多用于稀疏图</p>
+<h2 id="图的实现"><a href="#图的实现" class="headerlink" title="图的实现"></a>图的实现</h2><p>&emsp;链式存储结构</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">       第一</span><br><span class="line">    /   /\  \ 1</span><br><span class="line"> 6 /   /  \  \</span><br><span class="line">第四   /5   \3 第二</span><br><span class="line"> \   /      \  |</span><br><span class="line"> 7\ /        \ |2</span><br><span class="line">  第五 ---4--- 第三</span><br><span class="line">  </span><br><span class="line">   图</span><br></pre></td></tr></table></figure>
+<h3 id="定义一个顶点"><a href="#定义一个顶点" class="headerlink" title="定义一个顶点"></a>定义一个顶点</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">public struct Vertex&lt;T:Hashable&gt; &#123;</span><br><span class="line">    var data :T</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">extension Vertex:Hashable &#123;</span><br><span class="line">    </span><br><span class="line">    public var hashValue: Int &#123;</span><br><span class="line">        return &quot;\(data)&quot;.hashValue</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    static public func == (lhs:Vertex,rhs:Vertex) -&gt; Bool &#123;</span><br><span class="line">        return lhs.data == rhs.data</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">extension Vertex: CustomStringConvertible &#123;</span><br><span class="line">    public var description: String &#123;</span><br><span class="line">        return &quot;\(data)&quot;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="定义边"><a href="#定义边" class="headerlink" title="定义边"></a>定义边</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">public enum EdgeType &#123;</span><br><span class="line">    case directed // 有方向的</span><br><span class="line">    case undirected // 无方向的</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public struct Edge&lt;T:Hashable&gt; &#123;</span><br><span class="line">    public var source:Vertex&lt;T&gt; //原点</span><br><span class="line">    public var destination:Vertex&lt;T&gt;//目的地</span><br><span class="line">    public let weight: Double? //权重</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">extension Edge :Hashable &#123;</span><br><span class="line">    </span><br><span class="line">    public var hashValue: Int &#123;</span><br><span class="line">        return &quot;\(source)\(destination)\(weight)&quot;.hashValue</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    static public func == (lhs:Edge&lt;T&gt;,rhs:Edge&lt;T&gt;) -&gt; Bool &#123;</span><br><span class="line">        return lhs.source == rhs.source &amp;&amp; lhs.destination == rhs.destination &amp;&amp; lhs.weight == rhs.weight</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="定义协议"><a href="#定义协议" class="headerlink" title="定义协议"></a>定义协议</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">protocol Graphable &#123;</span><br><span class="line">    //协议需要一个称为元素的关联类型。这允许协议是通用的，可以容纳任何类型。</span><br><span class="line">    associatedtype Element: Hashable //</span><br><span class="line">    //为了让使用者定义一个输出的格式</span><br><span class="line">    var description: CustomStringConvertible &#123; get &#125; // 2</span><br><span class="line">    //提供一个通用的方法生成一个顶点</span><br><span class="line">    func createVertex(data: Element) -&gt; Vertex&lt;Element&gt; // 3</span><br><span class="line">    //提供一个通用的方法 在两个顶点之间添加一条边</span><br><span class="line">    func add(_ type: EdgeType, from source: Vertex&lt;Element&gt;, to destination: Vertex&lt;Element&gt;, weight: Double?)</span><br><span class="line">    //获取两个顶点之间的权重</span><br><span class="line">    func weight(from source: Vertex&lt;Element&gt;, to destination: Vertex&lt;Element&gt;) -&gt; Double?</span><br><span class="line">    // 获取与顶点相连的所有的边</span><br><span class="line">    func edges(from source: Vertex&lt;Element&gt;) -&gt; [Edge&lt;Element&gt;]? // 6</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="定义一个表实现协议"><a href="#定义一个表实现协议" class="headerlink" title="定义一个表实现协议"></a>定义一个表实现协议</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><span class="line">open class AdjacencyList&lt;T: Hashable&gt; &#123;</span><br><span class="line">    // adjacencyDict 是一个字典 key 是顶点 value 是于顶点相连的所有边</span><br><span class="line">    public var adjacencyDict : [Vertex&lt;T&gt;: [Edge&lt;T&gt;]] = [:]</span><br><span class="line">    public init() &#123;&#125;</span><br><span class="line"></span><br><span class="line">    /// 添加一个有方向的边</span><br><span class="line">    ///</span><br><span class="line">    /// - Parameters:</span><br><span class="line">    ///   - source: 顶点</span><br><span class="line">    ///   - destination: 终点</span><br><span class="line">    ///   - weight: 权重</span><br><span class="line">    fileprivate func addDirectedEdge(from source: Vertex&lt;Element&gt;, to destination: Vertex&lt;Element&gt;, weight: Double?) &#123;</span><br><span class="line">        let edge = Edge(source: source, destination: destination, weight: weight) // 1</span><br><span class="line">        adjacencyDict[source]?.append(edge) // 2</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    /// 添加一个无方向的边：无论是源点或者是终点，其对应的边点数组都要添加这条边</span><br><span class="line">    ///</span><br><span class="line">    /// - Parameters:</span><br><span class="line">    ///   - vertices: 源点和终点</span><br><span class="line">    ///   - weight: 权重</span><br><span class="line">    fileprivate func addUndirectedEdge(vertices: (Vertex&lt;Element&gt;, Vertex&lt;Element&gt;), weight: Double?) &#123;</span><br><span class="line">        let (source, destination) = vertices</span><br><span class="line">        addDirectedEdge(from: source, to: destination, weight: weight)</span><br><span class="line">        addDirectedEdge(from: destination, to: source, weight: weight)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">extension AdjacencyList:Graphable &#123;</span><br><span class="line">    public typealias Element = T</span><br><span class="line">    //为了让使用者定义一个输出的格式</span><br><span class="line">   public var description: CustomStringConvertible &#123;</span><br><span class="line">        var result = &quot;&quot;</span><br><span class="line">        for (vertex, edges) in adjacencyDict &#123;</span><br><span class="line">            var edgeString = &quot;&quot;</span><br><span class="line">            for (index, edge) in edges.enumerated() &#123;</span><br><span class="line">                if index != edges.count - 1 &#123;</span><br><span class="line">                    edgeString.append(&quot;\(edge.destination), &quot;)</span><br><span class="line">                &#125; else &#123;</span><br><span class="line">                    edgeString.append(&quot;\(edge.destination)&quot;)</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            result.append(&quot;\(vertex) ---&gt; [ \(edgeString) ] \n &quot;)</span><br><span class="line">        &#125;</span><br><span class="line">        return result</span><br><span class="line">    &#125; // 2</span><br><span class="line">    //提供一个通用的方法生成一个顶点</span><br><span class="line">    public func createVertex(data: Element) -&gt; Vertex&lt;Element&gt; &#123;</span><br><span class="line">        let vertex = Vertex(data: data) //生成一个顶点</span><br><span class="line">        if adjacencyDict[vertex] == nil &#123; //如果当前存储边的数组为 nil（即还没有初始化） 则生成一个数组</span><br><span class="line">            adjacencyDict[vertex] = []</span><br><span class="line">        &#125;</span><br><span class="line">        return vertex //返回顶点</span><br><span class="line">    &#125;</span><br><span class="line">    //提供一个通用的方法 在两个顶点之间添加一条边</span><br><span class="line">   public func add(_ type: EdgeType, from source: Vertex&lt;Element&gt;, to destination: Vertex&lt;Element&gt;, weight: Double?) &#123;</span><br><span class="line">        switch type &#123;</span><br><span class="line">        case .directed://有向图</span><br><span class="line">            addDirectedEdge(from: source, to: destination, weight: weight)</span><br><span class="line">            break</span><br><span class="line">        case .undirected://无向图</span><br><span class="line">            addUndirectedEdge(vertices: (source, destination), weight: weight)</span><br><span class="line">            break</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    //获取两个顶点之间的权重</span><br><span class="line">  public  func weight(from source: Vertex&lt;Element&gt;, to destination: Vertex&lt;Element&gt;) -&gt; Double? &#123;</span><br><span class="line">        //获取当前源点的所有边</span><br><span class="line">        guard let edges = adjacencyDict[source] else &#123; return nil &#125;</span><br><span class="line">        for edge in edges &#123;// 遍历所有边</span><br><span class="line">            if edge.destination == destination &#123;//如果当前边的目的地等于要查询的目的地</span><br><span class="line">                return edge.weight //则返回 权重</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return nil</span><br><span class="line">    &#125;</span><br><span class="line">    // 获取与顶点相连的所有的边</span><br><span class="line">   public func edges(from source: Vertex&lt;Element&gt;) -&gt; [Edge&lt;Element&gt;]? &#123;</span><br><span class="line">        return adjacencyDict[source]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">let list = AdjacencyList&lt;String&gt;.init()</span><br><span class="line"></span><br><span class="line">  let first =  list.createVertex(data: &quot;第一&quot;)</span><br><span class="line">  let second =   list.createVertex(data: &quot;第二&quot;)</span><br><span class="line">  let third =   list.createVertex(data: &quot;第三&quot;)</span><br><span class="line">  let forth =   list.createVertex(data: &quot;第四&quot;)</span><br><span class="line">  let fifth =   list.createVertex(data: &quot;第五&quot;)</span><br><span class="line"></span><br><span class="line">list.add(.undirected, from: first, to: second, weight: 1)</span><br><span class="line">list.add(.undirected, from: first, to: third, weight: 3)</span><br><span class="line">list.add(.undirected, from: first, to: forth, weight: 6)</span><br><span class="line">list.add(.undirected, from: first, to: fifth, weight: 5)</span><br><span class="line">list.add(.undirected, from: forth, to: fifth, weight: 7)</span><br><span class="line">list.add(.undirected, from: fifth, to: third, weight: 4)</span><br><span class="line">list.add(.undirected, from: second, to: third, weight: 2)</span><br><span class="line"></span><br><span class="line">print(list.description)</span><br><span class="line"></span><br><span class="line">结果：</span><br><span class="line"></span><br><span class="line">第四 ---&gt; [ 第一, 第五 ] </span><br><span class="line"> 第一 ---&gt; [ 第二, 第三, 第四, 第五 ] </span><br><span class="line"> 第五 ---&gt; [ 第一, 第四, 第三 ] </span><br><span class="line"> 第三 ---&gt; [ 第一, 第五, 第二 ] </span><br><span class="line"> 第二 ---&gt; [ 第一, 第三 ] </span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">//print(list.edges(from: third))</span><br><span class="line">print(list.weight(from: third, to: fifth) ?? 0)</span><br><span class="line"></span><br><span class="line">结果：</span><br><span class="line"> 4.0</span><br></pre></td></tr></table></figure>
+<h2 id="图的遍历"><a href="#图的遍历" class="headerlink" title="图的遍历"></a>图的遍历</h2><h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><p>&emsp;从已给的连通图中某一顶点出发，沿着一些边访遍图中所有的顶点，且使每个顶点仅被访问一次，就叫做图的遍历，它是图的基本运算。</p>
+<h3 id="遍历实质"><a href="#遍历实质" class="headerlink" title="遍历实质"></a>遍历实质</h3><p>&emsp;找每个顶点的邻接点的过程。</p>
+<h3 id="图的特点"><a href="#图的特点" class="headerlink" title="图的特点"></a>图的特点</h3><p>&emsp;图中可能存在回路，且图的任一顶点都可能与其它顶点相通，在访问完某个顶点之后可能会沿着某些边又回到了曾经访问过的顶点。</p>
+<h3 id="图常用的遍历："><a href="#图常用的遍历：" class="headerlink" title="图常用的遍历："></a>图常用的遍历：</h3><h4 id="深度优先搜索"><a href="#深度优先搜索" class="headerlink" title="深度优先搜索"></a>深度优先搜索</h4><p>&emsp;仿树的先序遍历过程</p>
+<p><strong>简单归纳：</strong></p>
+<ol>
+<li>访问起始点v;</li>
+<li>若v的第1个邻接点没访问过，深度遍历此邻接点；</li>
+<li>若当前邻接点已访问过，再找v的第2个邻接点重新遍历。</li>
+</ol>
+<p><strong>深度优先搜索算法实现</strong></p>
+<p>&emsp;与广度优先搜索算法不同的是广度优先算法需要一个队列作铺助，而广度优先搜索算法需要一个栈，因为栈是先进后出，深度优先搜索算法需要实现回退的逻辑，而栈正好符合。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">public func depthFirstSearch(from source: Vertex&lt;Element&gt;, to destination: Vertex&lt;Element&gt;)</span><br><span class="line">    -&gt; [Edge&lt;Element&gt;]?  &#123;</span><br><span class="line">        // 之所以用队列的原因就是 深度优先算法需要回退</span><br><span class="line">        var stack = Stack&lt;Vertex&lt;Element&gt;&gt;() // 创建一个堆栈来存储从起点到终点的潜在路径。</span><br><span class="line">            stack.push(source)//把开始的顶点压入栈</span><br><span class="line">         var visits : [Vertex&lt;Element&gt; : Visit&lt;Element&gt;] = [source: .source]//存储已经访问过的顶点</span><br><span class="line">         while let vertex = stack.pop()  &#123;</span><br><span class="line">            if vertex == destination &#123; // 如果源点和终点相同</span><br><span class="line">                var vertex = destination //</span><br><span class="line">                var route: [Edge&lt;Element&gt;] = []// 访问的路径</span><br><span class="line">                while let visit = visits[vertex],</span><br><span class="line">                    case .edge(let edge) = visit &#123;</span><br><span class="line">                        route = [edge] + route</span><br><span class="line">                        vertex = edge.source</span><br><span class="line">                &#125;</span><br><span class="line">                return route</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            guard let neighbors = self.edges(from: vertex), neighbors.count &gt; 0 else &#123;</span><br><span class="line">                _ = stack.pop()</span><br><span class="line">                continue</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            for edge in neighbors &#123;</span><br><span class="line">                if visits[edge.destination] == nil &#123;</span><br><span class="line">                    stack.push(edge.destination)</span><br><span class="line">                    visits[edge.destination] = .edge(edge)</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return nil</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">上文中的图用深度优先算法搜索 原点是“第五” 终点是“第二”</span><br><span class="line"></span><br><span class="line">if let ed = list.depthFirstSearch(from: fifth, to: second) &#123;</span><br><span class="line">    print(&quot;深度优先&quot;)</span><br><span class="line">    for edge in ed &#123;</span><br><span class="line">        print(&quot;\(edge.source) -&gt; \(edge.destination)&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">结果是：</span><br><span class="line"></span><br><span class="line">深度优先</span><br><span class="line">第五 -&gt; 第三</span><br><span class="line">第三 -&gt; 第二</span><br></pre></td></tr></table></figure>
+<h4 id="DFS算法效率分析"><a href="#DFS算法效率分析" class="headerlink" title="DFS算法效率分析"></a>DFS算法效率分析</h4><ol>
+<li>用邻接矩阵来表示图，遍历图中每一个顶点都要从头扫描该顶点所在行，时间复杂度为O(n2)。</li>
+<li>用邻接表来表示图，虽然有 2e 个表结点，但只需扫描 e 个结点即可完成遍历，加上访问 n个头结点的时间，时间复杂度为O(n+e)。</li>
+</ol>
+<p><strong>结论：</strong><br>稠密图适于在邻接矩阵上进行深度遍历；<br>稀疏图适于在邻接表上进行深度遍历。</p>
+<h4 id="广度优先搜索"><a href="#广度优先搜索" class="headerlink" title="广度优先搜索"></a>广度优先搜索</h4><p>&emsp;基本思想：——仿树的层次遍历过程</p>
+<p><strong>步骤简单归纳：</strong></p>
+<p>1.在访问了起始点v之后，依次访问 v的邻接点；</p>
+<p>2.然后再依次访问这些顶点中未被访问过的邻接点；<br>直到所有顶点都被访问过为止。</p>
+<p><strong>代码实现以及步骤</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">  public func breadthFirstSearch(from source: Vertex&lt;Element&gt;, to destination: Vertex&lt;Element&gt;)</span><br><span class="line">        -&gt; [Edge&lt;Element&gt;]? &#123;</span><br><span class="line">            var queue = GraphaQueue&lt;Vertex&lt;Element&gt;&gt;()</span><br><span class="line">                queue.enqueue(source) // 1先把源点加入队列</span><br><span class="line">            /*</span><br><span class="line">                用字典 记录已经访问过的顶点用于记录访问的路径</span><br><span class="line">                键:顶点</span><br><span class="line">                值:一个枚举值</span><br><span class="line">                     enum Visit&lt;Element: Hashable&gt; &#123;</span><br><span class="line">                        case source 原点</span><br><span class="line">                        case edge(Edge&lt;Element&gt;) 边</span><br><span class="line">                     &#125;</span><br><span class="line">             */</span><br><span class="line">             var visits : [Vertex&lt;Element&gt; : Visit&lt;Element&gt;] = [source: .source]</span><br><span class="line">            while let visitedVertex = queue.dequeue() &#123; // 2遍历取出然后取出出队的元素</span><br><span class="line">                if visitedVertex == destination &#123; // 3如果源点和终点相同</span><br><span class="line">                    var vertex = destination //</span><br><span class="line">                    var route: [Edge&lt;Element&gt;] = []// 访问的路径</span><br><span class="line">                    </span><br><span class="line">                    while let visit = visits[vertex],</span><br><span class="line">                        case .edge(let edge) = visit &#123;</span><br><span class="line">                            route = [edge] + route</span><br><span class="line">                            vertex = edge.source</span><br><span class="line">                            </span><br><span class="line">                    &#125;</span><br><span class="line">                    return route</span><br><span class="line">                &#125;</span><br><span class="line">                /*</span><br><span class="line">                 1 取出跟原点相关的所有边</span><br><span class="line">                 2 遍历跟原点相关的所有边 --&gt; 找到边的终点</span><br><span class="line">                 3 判断：如果边的终点没有被访问过：即邻接点还没有被访问过</span><br><span class="line">                 4 把此邻接点加入队列</span><br><span class="line">                 5 把邻接点标记为已访问</span><br><span class="line">                 */</span><br><span class="line">                let neighbourEdges = edges(from: visitedVertex) ?? [] // 1</span><br><span class="line">                for edge in neighbourEdges &#123;//2</span><br><span class="line">                    if visits[edge.destination] == nil &#123;//3</span><br><span class="line">                        queue.enqueue(edge.destination)//4</span><br><span class="line">                        visits[edge.destination] = .edge(edge)//5</span><br><span class="line">                    &#125;</span><br><span class="line">                    print(&quot;\(edge.destination)&quot;)</span><br><span class="line">                &#125;</span><br><span class="line">                print(&quot;---end---\n&quot;)</span><br><span class="line">            &#125;</span><br><span class="line">            return nil</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">上文中的图用广度优先搜索，原点是“第五” 终点是“第二”</span><br><span class="line"></span><br><span class="line">if let ed = list.breadthFirstSearch(from: fifth, to: second) &#123;</span><br><span class="line">    print(&quot;广度优先&quot;)</span><br><span class="line">    for edge in ed &#123;</span><br><span class="line">        print(&quot;\(edge.source) -&gt; \(edge.destination)&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">结果：</span><br><span class="line"></span><br><span class="line">广度优先</span><br><span class="line">第五 -&gt; 第一</span><br><span class="line">第一 -&gt; 第二</span><br></pre></td></tr></table></figure>
+<ul>
+<li style="list-style: none"><input type="checkbox" checked> 注意：同样是从“第五”到“第二”，广度优先算法和深度优先算法的结果是不同的</li>
+</ul>
+<p><strong>总结</strong>：广度优先搜索是一种分层的搜索过程，每向前走一步可能访问一批顶点，不像深度优先搜索那样有回退的情况。<br>因此，广度优先搜索不是一个递归的过程，其算法也不是递归的。</p>
+<h4 id="广度优先算法效率分析"><a href="#广度优先算法效率分析" class="headerlink" title="广度优先算法效率分析"></a>广度优先算法效率分析</h4><ul>
+<li>如果使用邻接矩阵，则BFS对于每一个被访问到的顶点，都要循环检测矩阵中的整整一行（ n 个元素），总的时间代价为O(n2)。</li>
+<li>用邻接表来表示图，虽然有 2e 个表结点，但只需扫描 e 个结点即可完成遍历，加上访问 n个头结点的时间，时间复杂度为O(n+e)。</li>
+</ul>
+<h4 id="广度优先与深度优先算法效率比较"><a href="#广度优先与深度优先算法效率比较" class="headerlink" title="广度优先与深度优先算法效率比较"></a>广度优先与深度优先算法效率比较</h4><ul>
+<li><p>空间复杂度相同，都是O(n)(借用了堆栈或队列）；</p>
+</li>
+<li><p>时间复杂度只与存储结构（邻接矩阵或邻接表）有关，而与搜索路径无关。</p>
+</li>
+</ul>
+<h2 id="图的应用"><a href="#图的应用" class="headerlink" title="图的应用"></a>图的应用</h2><h3 id="最小生成树"><a href="#最小生成树" class="headerlink" title="最小生成树"></a>最小生成树</h3><blockquote>
+<p>极小连通子图：该子图是G 的连通子图，在该子图中删除任何一条边，子图不再连通。</p>
+</blockquote>
+<blockquote>
+<p>生成树：包含图G所有顶点的极小连通子图（n-1条边）。</p>
+</blockquote>
+<p><img src="https://user-gold-cdn.xitu.io/2018/7/26/164d7401eb75216a?w=1368&amp;h=504&amp;f=png&amp;s=110462" alt=""></p>
+<h4 id="最小生成树的典型用途"><a href="#最小生成树的典型用途" class="headerlink" title="最小生成树的典型用途"></a>最小生成树的典型用途</h4><p>&emsp;欲在n个城市间建立通信网，则n个城市应铺n-1条线路；但因为每条线路都会有对应的经济成本，而n个城市可能有n(n-1)/2 条线路，那么，如何选择n–1条线路，使总费用最少？</p>
+<blockquote>
+<p>首先明确：<br>使用不同的遍历图的方法，可以得到不同的生成树<br>从不同的顶点出发，也可能得到不同的生成树。<br>按照生成树的定义，n 个顶点的连通网络的生成树有 n 个顶点、n-1 条边。</p>
+</blockquote>
+<p>&emsp;目标：<br>在网的多个生成树中，寻找一个各边权值之和最小的生成树</p>
+<h4 id="构造最小生成树的准则"><a href="#构造最小生成树的准则" class="headerlink" title="构造最小生成树的准则"></a>构造最小生成树的准则</h4><ul>
+<li>必须只使用该网中的边来构造最小生成树；</li>
+<li>必须使用且仅使用n-1条边来联结网络中的n个顶点</li>
+<li>不能使用产生回路的边</li>
+</ul>
+<h4 id="如何求最小生成树"><a href="#如何求最小生成树" class="headerlink" title="如何求最小生成树"></a>如何求最小生成树</h4><h5 id="Prim算法"><a href="#Prim算法" class="headerlink" title="Prim算法:"></a>Prim算法:</h5><p>&emsp;归并顶点，与边数无关，适于稠密网</p>
+<p>代码实现： 要依赖一个优先队列（堆）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">class Prim&lt;T:Hashable&gt; &#123;</span><br><span class="line">    </span><br><span class="line">    typealias Graph = AdjacencyList&lt;T&gt;</span><br><span class="line">    //定义一个小堆</span><br><span class="line">    var heap = Heap&lt;(vertex:Vertex&lt;T&gt;,weight:Double,parent:Vertex&lt;T&gt;?)&gt;.init &#123; (vertex, vertex2) -&gt; Bool in</span><br><span class="line">        return vertex.weight &lt; vertex2.weight</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    /// 生成最小生成树</span><br><span class="line">    ///</span><br><span class="line">    /// - Parameter graph: &lt;#graph description#&gt;</span><br><span class="line">    /// - Returns: &lt;#return value description#&gt;</span><br><span class="line">    func createMinimumSpanningTree(graph:Graph) -&gt; (cost:Double,mst:Graph) &#123;</span><br><span class="line">        var cost = 0.0</span><br><span class="line">        let mst = Graph()</span><br><span class="line">        var visited = Set&lt;Vertex&lt;T&gt;&gt;()</span><br><span class="line">        </span><br><span class="line">        guard let start = graph.getAllVertices().first else&#123;</span><br><span class="line">            print(mst.description)</span><br><span class="line">            return (cost:cost,mst:mst)</span><br><span class="line">        &#125;</span><br><span class="line">        //先把开始的顶点加入到堆中</span><br><span class="line">        heap.enqueue((vertex: start, weight: 0.0, parent: nil))</span><br><span class="line">        </span><br><span class="line">        while let head = heap.dequeue() &#123;</span><br><span class="line">            let vertex = head.vertex //取出堆中的第一个顶点</span><br><span class="line">            if visited.contains(vertex) &#123;//检查是否已经访问过了 如果已经访问过了 则进行下一次循环</span><br><span class="line">                continue</span><br><span class="line">            &#125;</span><br><span class="line">            visited.insert(vertex)</span><br><span class="line">            cost += head.weight</span><br><span class="line">            if let prev = head.parent &#123; // 5</span><br><span class="line">                print(prev.description)</span><br><span class="line">                let pre = mst.createVertex(data: prev.data)</span><br><span class="line">                let ver = mst.createVertex(data: vertex.data)</span><br><span class="line">                mst.add(.undirected, from: pre, to: ver, weight: head.weight)</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            if let neighbours = graph.edges(from: vertex) &#123;</span><br><span class="line">                for neighbour in neighbours &#123;</span><br><span class="line">                    if !visited.contains(neighbour.destination) &#123;</span><br><span class="line">                        heap.enqueue((vertex: neighbour.destination, weight: neighbour.weight ?? 0, parent: vertex))</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return (cost:cost,mst:mst)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>测试：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">let list = AdjacencyList&lt;String&gt;.init()</span><br><span class="line"></span><br><span class="line">let first =  list.createVertex(data: &quot;第一&quot;)</span><br><span class="line">let second =   list.createVertex(data: &quot;第二&quot;)</span><br><span class="line">let third =   list.createVertex(data: &quot;第三&quot;)</span><br><span class="line">let forth =   list.createVertex(data: &quot;第四&quot;)</span><br><span class="line">let fifth =   list.createVertex(data: &quot;第五&quot;)</span><br><span class="line"></span><br><span class="line">list.add(.undirected, from: first, to: second, weight: 1)</span><br><span class="line">list.add(.undirected, from: first, to: third, weight: 3)</span><br><span class="line">list.add(.undirected, from: first, to: forth, weight: 6)</span><br><span class="line">list.add(.undirected, from: first, to: fifth, weight: 5)</span><br><span class="line">list.add(.undirected, from: forth, to: fifth, weight: 7)</span><br><span class="line">list.add(.undirected, from: fifth, to: third, weight: 4)</span><br><span class="line">list.add(.undirected, from: second, to: third, weight: 2)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">let prim = Prim&lt;String&gt;.init()</span><br><span class="line">let (cost,mst) = prim.createMinimumSpanningTree(graph: list)</span><br><span class="line"></span><br><span class="line">print(&quot;权值:\(cost)&quot;)</span><br><span class="line">print(&quot;最小生成树:&quot;)</span><br><span class="line"></span><br><span class="line">print(mst.description)</span><br><span class="line"></span><br><span class="line">结果：</span><br><span class="line"></span><br><span class="line">权值:13.0</span><br><span class="line">最小生成树:</span><br><span class="line">第四 ---&gt; [ 第一 ] </span><br><span class="line"> 第一 ---&gt; [ 第四, 第二 ] </span><br><span class="line"> 第五 ---&gt; [ 第三 ] </span><br><span class="line"> 第三 ---&gt; [ 第二, 第五 ] </span><br><span class="line"> 第二 ---&gt; [ 第一, 第三 ]</span><br></pre></td></tr></table></figure></p>
+<h5 id="Kruskal算法"><a href="#Kruskal算法" class="headerlink" title="Kruskal算法"></a>Kruskal算法</h5><p>&emsp;归并边，适于稀疏网</p>
+<h3 id="最短路径"><a href="#最短路径" class="headerlink" title="最短路径"></a>最短路径</h3><p><strong>典型用途：</strong> 交通问题。如：城市A到城市B有多条线路，但每条线路的交通费（或所需时间）不同，那么，如何选择一条线路，使总费用（或总时间）最少？</p>
+<p><strong>问题抽象：</strong> 在带权有向图中A点（源点）到达B点（终点）的多条路径中，寻找一条各边权值之和最小的路径，即最短路径。</p>
+<ul>
+<li style="list-style: none"><input type="checkbox"> 注意：最短路径与最小生成树不同，路径上不一定包含n个顶点</li>
+</ul>
+<h4 id="两种常见的最短路径问题："><a href="#两种常见的最短路径问题：" class="headerlink" title="两种常见的最短路径问题："></a>两种常见的最短路径问题：</h4><h5 id="单源最短路径—用Dijkstra（迪杰斯特拉）算法"><a href="#单源最短路径—用Dijkstra（迪杰斯特拉）算法" class="headerlink" title="单源最短路径—用Dijkstra（迪杰斯特拉）算法"></a>单源最短路径—用Dijkstra（迪杰斯特拉）算法</h5><p>&emsp;一顶点到其余各顶点</p>
+<h5 id="所有顶点间的最短路径—用Floyd（弗洛伊德）算法"><a href="#所有顶点间的最短路径—用Floyd（弗洛伊德）算法" class="headerlink" title="所有顶点间的最短路径—用Floyd（弗洛伊德）算法"></a>所有顶点间的最短路径—用Floyd（弗洛伊德）算法</h5><p>&emsp;任意两顶点之间</p>
+<h3 id="拓扑排序"><a href="#拓扑排序" class="headerlink" title="拓扑排序"></a>拓扑排序</h3><h4 id="解决的问题"><a href="#解决的问题" class="headerlink" title="解决的问题"></a>解决的问题</h4><p>&emsp;用有向图来描述一个工程或系统的进行过程。<br>一个工程可以分为若干个子工程，只要完成了这些子工程（活动），就可以导致整个工程的完成。</p>
+<blockquote>
+<p>拓扑排序算法的思想－重复选择没有直接前驱的顶点</p>
+</blockquote>
+<ol>
+<li>输入AOV网络。令 n 为顶点个数。    </li>
+<li>在AOV网络中选一个没有直接前驱的顶点, 并输出之; </li>
+<li>从图中删去该顶点, 同时删去所有它发出的有向边;</li>
+<li>重复以上 2、3 步, 直到：</li>
+</ol>
+<p>&emsp;1&gt;全部顶点均已输出，拓扑有序序列形成，拓扑排序完成</p>
+<p>&emsp;2&gt;图中还有未输出的顶点，但已跳出处理循环。这说明图中还剩下一些顶点，它们都有直接前驱，再也找不到没有前驱的顶点了。这时AOV网络中必定存在有向环。</p>
+<h3 id="关键路径"><a href="#关键路径" class="headerlink" title="关键路径"></a>关键路径</h3><h4 id="解决的问题-1"><a href="#解决的问题-1" class="headerlink" title="解决的问题"></a>解决的问题</h4><p>&emsp;        假设以有向网表示一个施工流图，弧上的权值表示完成该项子工程所需时间。<br>问：哪些子工程项是“关键工程”？<br>即：哪些子工程项将影响整个工程的完成期限的。</p>
+<p>&emsp;整个工程完成的时间为：从有向图的源点到汇点的最长路径。</p>
+<p>&emsp;关键活动指的是：该弧上的权值增加 将使有向图上的最长路径的长度增加。</p>
+<p>未完待续。。。</p>
+
+      
+    </div>
+    
+    
+    
+
+
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创,您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/weixinPay.png" alt="老JI 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/zhifubao.jpeg" alt="老JI 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    老JI
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://www.wuchao.net.cn/2018/08/12/数据结构笔记—图/" title="数据结构笔记—图">http://www.wuchao.net.cn/2018/08/12/数据结构笔记—图/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/数据结构/" rel="tag"><i class="fa fa-tag"></i> 数据结构</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/11/数据结构笔记—树和二叉树/" rel="next" title="数据结构笔记—树和二叉树">
+                <i class="fa fa-chevron-left"></i> 数据结构笔记—树和二叉树
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/08/13/数据结构笔记—栈和队列/" rel="prev" title="数据结构笔记—栈和队列">
+                数据结构笔记—栈和队列 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      
+        <div id="gitment-container"></div>
+      
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.jpeg"
+                alt="老JI" />
+            
+              <p class="site-author-name" itemprop="name">老JI</p>
+              <p class="site-description motion-element" itemprop="description">iOS，swift ,OC</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/JiWuChao" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://juejin.im/user/5a30f4826fb9a0450e761ce7/posts" target="_blank" title="掘金">
+                      
+                        <i class="fa fa-fw fa-angle-double-down"></i>掘金</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.jianshu.com/u/ac986bb0e59a" target="_blank" title="简书">
+                      
+                        <i class="fa fa-fw fa-book"></i>简书</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/jiwuchao" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                推荐阅读
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://juejin.im/user/5a30f4826fb9a0450e761ce7/posts" title="掘金" target="_blank">掘金</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.jianshu.com/u/ac986bb0e59a" title="简书" target="_blank">简书</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#图的定义和基本术语"><span class="nav-number">1.</span> <span class="nav-text">图的定义和基本术语</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#图的知识图谱"><span class="nav-number">1.1.</span> <span class="nav-text">图的知识图谱</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#图"><span class="nav-number">1.1.1.</span> <span class="nav-text">图</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#图的存储结构"><span class="nav-number">2.</span> <span class="nav-text">图的存储结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#顺序存储结构："><span class="nav-number">2.1.</span> <span class="nav-text">顺序存储结构：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#邻接矩阵表示法的特点"><span class="nav-number">2.1.1.</span> <span class="nav-text">邻接矩阵表示法的特点</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#链式存储结构："><span class="nav-number">2.2.</span> <span class="nav-text">链式存储结构：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#邻接表表示法的特点"><span class="nav-number">2.2.1.</span> <span class="nav-text">邻接表表示法的特点</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#邻接矩阵与邻接表表示法的关系"><span class="nav-number">2.3.</span> <span class="nav-text">邻接矩阵与邻接表表示法的关系</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#图的实现"><span class="nav-number">3.</span> <span class="nav-text">图的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#定义一个顶点"><span class="nav-number">3.1.</span> <span class="nav-text">定义一个顶点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#定义边"><span class="nav-number">3.2.</span> <span class="nav-text">定义边</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#定义协议"><span class="nav-number">3.3.</span> <span class="nav-text">定义协议</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#定义一个表实现协议"><span class="nav-number">3.4.</span> <span class="nav-text">定义一个表实现协议</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用"><span class="nav-number">3.5.</span> <span class="nav-text">使用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#图的遍历"><span class="nav-number">4.</span> <span class="nav-text">图的遍历</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#定义"><span class="nav-number">4.1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#遍历实质"><span class="nav-number">4.2.</span> <span class="nav-text">遍历实质</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#图的特点"><span class="nav-number">4.3.</span> <span class="nav-text">图的特点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#图常用的遍历："><span class="nav-number">4.4.</span> <span class="nav-text">图常用的遍历：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#深度优先搜索"><span class="nav-number">4.4.1.</span> <span class="nav-text">深度优先搜索</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#DFS算法效率分析"><span class="nav-number">4.4.2.</span> <span class="nav-text">DFS算法效率分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#广度优先搜索"><span class="nav-number">4.4.3.</span> <span class="nav-text">广度优先搜索</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#广度优先算法效率分析"><span class="nav-number">4.4.4.</span> <span class="nav-text">广度优先算法效率分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#广度优先与深度优先算法效率比较"><span class="nav-number">4.4.5.</span> <span class="nav-text">广度优先与深度优先算法效率比较</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#图的应用"><span class="nav-number">5.</span> <span class="nav-text">图的应用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#最小生成树"><span class="nav-number">5.1.</span> <span class="nav-text">最小生成树</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#最小生成树的典型用途"><span class="nav-number">5.1.1.</span> <span class="nav-text">最小生成树的典型用途</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#构造最小生成树的准则"><span class="nav-number">5.1.2.</span> <span class="nav-text">构造最小生成树的准则</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#如何求最小生成树"><span class="nav-number">5.1.3.</span> <span class="nav-text">如何求最小生成树</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Prim算法"><span class="nav-number">5.1.3.1.</span> <span class="nav-text">Prim算法:</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Kruskal算法"><span class="nav-number">5.1.3.2.</span> <span class="nav-text">Kruskal算法</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#最短路径"><span class="nav-number">5.2.</span> <span class="nav-text">最短路径</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#两种常见的最短路径问题："><span class="nav-number">5.2.1.</span> <span class="nav-text">两种常见的最短路径问题：</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#单源最短路径—用Dijkstra（迪杰斯特拉）算法"><span class="nav-number">5.2.1.1.</span> <span class="nav-text">单源最短路径—用Dijkstra（迪杰斯特拉）算法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#所有顶点间的最短路径—用Floyd（弗洛伊德）算法"><span class="nav-number">5.2.1.2.</span> <span class="nav-text">所有顶点间的最短路径—用Floyd（弗洛伊德）算法</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#拓扑排序"><span class="nav-number">5.3.</span> <span class="nav-text">拓扑排序</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#解决的问题"><span class="nav-number">5.3.1.</span> <span class="nav-text">解决的问题</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关键路径"><span class="nav-number">5.4.</span> <span class="nav-text">关键路径</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#解决的问题-1"><span class="nav-number">5.4.1.</span> <span class="nav-text">解决的问题</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+<div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">老JI</span>
+
+<!--
+<div align="center"><a href="http://www.amazingcounters.com"><img border="0" src="http://cc.amazingcounters.com/counter.php?i=3226256&c=9679081" alt="AmazingCounters.com"></a></div>
+
+-->
+ 
+
+
+
+<!--
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+-->
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共31.3k字</span>
+</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: decodeURI(window.location.pathname),
+            owner: 'JiWuChao',
+            repo: 'gitment-comments',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: 'ce987592f7ef13af8edd42588207684653ec035e',
+            
+                client_id: '7e24944f66fd4b97c2d9'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("ISSeOYnPycBRQe8e8J3yt6Jr-gzGzoHsz", "1glg9tTCEinuLtl0rQzKKyVw");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

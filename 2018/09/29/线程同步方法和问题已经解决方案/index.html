@@ -1,0 +1,1531 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="老JI" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="在日常开发中，需要当几个任务执行完之后再执行最后一个任务。一下就列举几个线程同步的常用方法，并指出其中的问题，以及提出解决方按。  Dispatch Group 调度组dispatch_group_notify 正常情况12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849">
+<meta name="keywords" content="OC">
+<meta property="og:type" content="article">
+<meta property="og:title" content="线程同步方法和问题已经解决方案">
+<meta property="og:url" content="http://www.wuchao.net.cn/2018/09/29/线程同步方法和问题已经解决方案/index.html">
+<meta property="og:site_name" content="老JI">
+<meta property="og:description" content="在日常开发中，需要当几个任务执行完之后再执行最后一个任务。一下就列举几个线程同步的常用方法，并指出其中的问题，以及提出解决方按。  Dispatch Group 调度组dispatch_group_notify 正常情况12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-09-29T08:38:11.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="线程同步方法和问题已经解决方案">
+<meta name="twitter:description" content="在日常开发中，需要当几个任务执行完之后再执行最后一个任务。一下就列举几个线程同步的常用方法，并指出其中的问题，以及提出解决方按。  Dispatch Group 调度组dispatch_group_notify 正常情况12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://www.wuchao.net.cn/2018/09/29/线程同步方法和问题已经解决方案/"/>
+
+
+
+
+
+  <title>线程同步方法和问题已经解决方案 | 老JI</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+		<!--添加右上角的github图标 2018年08月18日13:27:37 -->
+	
+		<!-- <a href="https://github.com/JiWuChao" class="github-corner" aria-label="View source on Github"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#fff; color:#151513; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+ -->
+
+
+		<a href="https://github.com/JiWuChao" class="github-corner" aria-label="View source on Github"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">老JI</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">The transformation from ordinary to extraordinary will not occur overnight !</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-top">
+          <a href="/top/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-signal"></i> <br />
+            
+            阅读排行
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.wuchao.net.cn/2018/09/29/线程同步方法和问题已经解决方案/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="老JI">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="老JI">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">线程同步方法和问题已经解决方案</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-29T16:07:37+08:00">
+                2018-09-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Objective-C/" itemprop="url" rel="index">
+                    <span itemprop="name">Objective-C</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/09/29/线程同步方法和问题已经解决方案/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2018/09/29/线程同步方法和问题已经解决方案/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2018/09/29/线程同步方法和问题已经解决方案/" class="leancloud_visitors" data-flag-title="线程同步方法和问题已经解决方案">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  5,739
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  27
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>在日常开发中，需要当几个任务执行完之后再执行最后一个任务。一下就列举几个线程同步的常用方法，并指出其中的问题，以及提出解决方按。</p>
+</blockquote>
+<h3 id="Dispatch-Group-调度组"><a href="#Dispatch-Group-调度组" class="headerlink" title="Dispatch Group 调度组"></a>Dispatch Group 调度组</h3><h4 id="dispatch-group-notify-正常情况"><a href="#dispatch-group-notify-正常情况" class="headerlink" title="dispatch_group_notify 正常情况"></a>dispatch_group_notify 正常情况</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line">- (void)dispathcGroupNotify &#123;</span><br><span class="line">    NSLog(@&quot;currentThread---%@&quot;,[NSThread currentThread]);</span><br><span class="line">    NSLog(@&quot;group---begin&quot;);</span><br><span class="line">    dispatch_group_t group = dispatch_group_create();</span><br><span class="line">    </span><br><span class="line">    dispatch_queue_t queue = dispatch_queue_create(&quot;com.jiwuchao.www&quot;, DISPATCH_QUEUE_CONCURRENT);</span><br><span class="line">    dispatch_queue_t queue1 = dispatch_queue_create(&quot;com.jiwuchao.www1&quot;, DISPATCH_QUEUE_CONCURRENT);</span><br><span class="line">    dispatch_queue_t queue2 = dispatch_queue_create(&quot;com.jiwuchao.www2&quot;, DISPATCH_QUEUE_CONCURRENT);</span><br><span class="line">    </span><br><span class="line">    dispatch_group_async(group, queue, ^&#123;</span><br><span class="line">        for (int i = 0; i &lt; 2; ++i) &#123;</span><br><span class="line">            [NSThread sleepForTimeInterval:2];</span><br><span class="line">            NSLog(@&quot;1---%@&quot;,[NSThread currentThread]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    </span><br><span class="line">    dispatch_group_async(group, queue1, ^&#123;</span><br><span class="line">        </span><br><span class="line">        for (int i = 0; i &lt; 2; ++i) &#123;</span><br><span class="line">            [NSThread sleepForTimeInterval:2];</span><br><span class="line">            NSLog(@&quot;1---%@&quot;,[NSThread currentThread]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    </span><br><span class="line">    dispatch_group_async(group, queue2, ^&#123;</span><br><span class="line">        for (int i = 0; i &lt; 2; ++i) &#123;</span><br><span class="line">            [NSThread sleepForTimeInterval:2];</span><br><span class="line">            NSLog(@&quot;3---%@&quot;,[NSThread currentThread]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    </span><br><span class="line">    dispatch_group_notify(group, dispatch_get_main_queue(), ^&#123;</span><br><span class="line">        // 等前面的异步任务1、任务2都执行完毕后，回到主线程执行下边任务</span><br><span class="line">        for (int i = 0; i &lt; 2; ++i) &#123;</span><br><span class="line">            [NSThread sleepForTimeInterval:2];</span><br><span class="line">            NSLog(@&quot;4---%@&quot;,[NSThread currentThread]);</span><br><span class="line">        &#125;</span><br><span class="line">        NSLog(@&quot;group---end&quot;);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">输出结果</span><br><span class="line"></span><br><span class="line">currentThread---&lt;NSThread: 0x600002cc7c40&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">group---begin</span><br><span class="line">1---&lt;NSThread: 0x600002ca3a00&gt;&#123;number = 4, name = (null)&#125;</span><br><span class="line">1---&lt;NSThread: 0x600002c84300&gt;&#123;number = 3, name = (null)&#125;</span><br><span class="line">3---&lt;NSThread: 0x600002c66840&gt;&#123;number = 8, name = (null)&#125;</span><br><span class="line">1---&lt;NSThread: 0x600002c84300&gt;&#123;number = 3, name = (null)&#125;</span><br><span class="line">3---&lt;NSThread: 0x600002c66840&gt;&#123;number = 8, name = (null)&#125;</span><br><span class="line">1---&lt;NSThread: 0x600002ca3a00&gt;&#123;number = 4, name = (null)&#125;</span><br><span class="line">4---&lt;NSThread: 0x600002cc7c40&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">4---&lt;NSThread: 0x600002cc7c40&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">group---end</span><br></pre></td></tr></table></figure>
+<p>&emsp; 以上执行结果是当任务1，2，3 执行完成之后才执行任务4 符合预期</p>
+<h4 id="dispatch-group-notify-异常情况"><a href="#dispatch-group-notify-异常情况" class="headerlink" title="dispatch_group_notify 异常情况"></a>dispatch_group_notify 异常情况</h4><h4 id="问题描述："><a href="#问题描述：" class="headerlink" title="问题描述："></a>问题描述：</h4><blockquote>
+<p>理想是 任务1 任务2 任务3 执行完成之后再执行任务4 为什有时会出现某个任务还没有执行完就开始执行任务4？比如有多个接口进行网络请求，当所有接口返回之后才刷新界面</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br></pre></td><td class="code"><pre><span class="line">- (void)dispathcGroupQuestion &#123;</span><br><span class="line">    NSLog(@&quot;currentThread---%@&quot;,[NSThread currentThread]);</span><br><span class="line">    NSLog(@&quot;group---begin&quot;);</span><br><span class="line">    dispatch_group_t group = dispatch_group_create();</span><br><span class="line">    </span><br><span class="line">    dispatch_queue_t queue = dispatch_queue_create(&quot;com.jiwuchao.www&quot;, DISPATCH_QUEUE_CONCURRENT);</span><br><span class="line">    dispatch_queue_t queue1 = dispatch_queue_create(&quot;com.jiwuchao.www1&quot;, DISPATCH_QUEUE_CONCURRENT);</span><br><span class="line">    dispatch_queue_t queue2 = dispatch_queue_create(&quot;com.jiwuchao.www2&quot;, DISPATCH_QUEUE_CONCURRENT);</span><br><span class="line">    //任务1</span><br><span class="line">    dispatch_group_async(group, queue, ^&#123;</span><br><span class="line">        for (int i = 0; i &lt; 2; ++i) &#123;</span><br><span class="line">            [NSThread sleepForTimeInterval:2];</span><br><span class="line">            NSLog(@&quot;任务1---%@&quot;,[NSThread currentThread]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    // 任务2</span><br><span class="line">    dispatch_group_async(group, queue1, ^&#123;</span><br><span class="line">        </span><br><span class="line">//        for (int i = 0; i &lt; 2; ++i) &#123;</span><br><span class="line">//            [NSThread sleepForTimeInterval:2];</span><br><span class="line">//            NSLog(@&quot;任务2---%@&quot;,[NSThread currentThread]);</span><br><span class="line">//        &#125;</span><br><span class="line">        </span><br><span class="line">        dispatch_queue_t queue4 =  dispatch_queue_create(&quot;wuchao.w&quot;, DISPATCH_QUEUE_CONCURRENT);</span><br><span class="line">        /*</span><br><span class="line">           如果dispatch_async 换成 dispatch_sync 则不会出现 上面的乱序问题y，因为并发队列 + 同步执行 并不能创建多个线程 所有任务2</span><br><span class="line">         的线程结束就是任务2及其子线程执行完的时机</span><br><span class="line">         */</span><br><span class="line">        dispatch_async(queue4, ^&#123;</span><br><span class="line">            // 子任务1</span><br><span class="line">            for (NSInteger i = 0; i &lt; 2; i++) &#123;</span><br><span class="line">                [NSThread sleepForTimeInterval:2];</span><br><span class="line">                NSLog(@&quot;任务2的-子任务1 - %@&quot;,[NSThread currentThread]);</span><br><span class="line">            &#125;</span><br><span class="line">            // 子任务2</span><br><span class="line">            for (NSInteger i = 0; i &lt; 2; i++) &#123;</span><br><span class="line">                [NSThread sleepForTimeInterval:2];</span><br><span class="line">                NSLog(@&quot;任务2的-子任务2 - %@&quot;,[NSThread currentThread]);</span><br><span class="line">            &#125;</span><br><span class="line">            // 子任务3</span><br><span class="line">            for (NSInteger i = 0; i &lt; 2; i++) &#123;</span><br><span class="line">                [NSThread sleepForTimeInterval:2];</span><br><span class="line">                NSLog(@&quot;任务2的-子任务3 - %@&quot;,[NSThread currentThread]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        </span><br><span class="line">    &#125;);</span><br><span class="line">    //任务3</span><br><span class="line">    dispatch_group_async(group, queue2, ^&#123;</span><br><span class="line">        for (int i = 0; i &lt; 2; ++i) &#123;</span><br><span class="line">            [NSThread sleepForTimeInterval:2];</span><br><span class="line">            NSLog(@&quot;任务3---%@&quot;,[NSThread currentThread]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    </span><br><span class="line">    dispatch_group_notify(group, dispatch_get_main_queue(), ^&#123;</span><br><span class="line">        // 等前面的异步任务1、任务2都执行完毕后，回到主线程执行下边任务</span><br><span class="line">        NSLog(@&quot;前面的异步操作都执行完毕&quot;);</span><br><span class="line">        for (int i = 0; i &lt; 2; ++i) &#123;</span><br><span class="line">            [NSThread sleepForTimeInterval:2];</span><br><span class="line">            NSLog(@&quot;开始执行dispatch_group_notify ---%@&quot;,[NSThread currentThread]);</span><br><span class="line">        &#125;</span><br><span class="line">        NSLog(@&quot;group---end&quot;);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">输出:</span><br><span class="line"></span><br><span class="line">currentThread---&lt;NSThread: 0x600003787ec0&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">group---begin</span><br><span class="line">任务3---&lt;NSThread: 0x60000372ed00&gt;&#123;number = 8, name = (null)&#125;</span><br><span class="line">任务1---&lt;NSThread: 0x6000037eaa80&gt;&#123;number = 4, name = (null)&#125;</span><br><span class="line">任务2的-子任务1 - &lt;NSThread: 0x6000037ca500&gt;&#123;number = 3, name = (null)&#125;</span><br><span class="line">任务3---&lt;NSThread: 0x60000372ed00&gt;&#123;number = 8, name = (null)&#125;</span><br><span class="line">任务1---&lt;NSThread: 0x6000037eaa80&gt;&#123;number = 4, name = (null)&#125;</span><br><span class="line">任务2的-子任务1 - &lt;NSThread: 0x6000037ca500&gt;&#123;number = 3, name = (null)&#125;</span><br><span class="line">前面的异步操作都执行完毕</span><br><span class="line">开始执行dispatch_group_notify ---&lt;NSThread: 0x600003787ec0&gt;&#123;number = 1, name =</span><br><span class="line">任务2的-子任务2 - &lt;NSThread: 0x6000037ca500&gt;&#123;number = 3, name = (null)&#125;</span><br><span class="line">开始执行dispatch_group_notify ---&lt;NSThread: 0x600003787ec0&gt;&#123;number = 1, name =</span><br><span class="line">group---end</span><br><span class="line">任务2的-子任务2 - &lt;NSThread: 0x6000037ca500&gt;&#123;number = 3, name = (null)&#125;</span><br><span class="line">任务2的-子任务3 - &lt;NSThread: 0x6000037ca500&gt;&#123;number = 3, name = (null)&#125;</span><br><span class="line">任务2的-子任务3 - &lt;NSThread: 0x6000037ca500&gt;&#123;number = 3, name = (null)&#125;</span><br></pre></td></tr></table></figure>
+<p>结论： 从上面的输出可以看出 ，当任务2 的子任务还没有执行完毕，就开始执行dispatch_group_notify中的任务，和预期任务2 执行完之后再执行 dispatch_group_notify中任务有出入</p>
+<h4 id="问题分析-为什么会出现这种情况？"><a href="#问题分析-为什么会出现这种情况？" class="headerlink" title="问题分析:为什么会出现这种情况？"></a>问题分析:为什么会出现这种情况？</h4><blockquote>
+<p>原因是：因为对于dispatch_group_notify 来说判断其之前的任务执行完毕的==根据是任务2 的线程执行完毕，不考虑任务2中其他子任务的线程是否执行完毕==。此时任务2的子任务是异步并发执行，开启多个线程。并没有阻塞任务2的线程，所以在其他线程中执行任务2的子任务的时候任务2的线程已经执行完了。当任务1 任务2 任务3 执行完毕之后就开始执行dispatch_group_notify 中的任务。但是任务2 中的子任务还在执行，这时就看到了输出的那样的结果。</p>
+</blockquote>
+<h4 id="问题解决-方法-1，2"><a href="#问题解决-方法-1，2" class="headerlink" title="问题解决:方法 1，2"></a>问题解决:方法 1，2</h4><h5 id="解决方法1-dispatch-group-enter-和-dispatch-group-leave"><a href="#解决方法1-dispatch-group-enter-和-dispatch-group-leave" class="headerlink" title="解决方法1  dispatch_group_enter 和 dispatch_group_leave"></a>解决方法1  dispatch_group_enter 和 dispatch_group_leave</h5><p>&emsp; dispatch_group_enter与dispatch_group_leave 组合比dispatch_group_async 更灵活</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br></pre></td><td class="code"><pre><span class="line">- (void)dispathcGroupAnswer &#123;</span><br><span class="line">    </span><br><span class="line">    NSLog(@&quot;currentThread---%@&quot;,[NSThread currentThread]);</span><br><span class="line">    NSLog(@&quot;group---begin&quot;);</span><br><span class="line">    dispatch_group_t group = dispatch_group_create();</span><br><span class="line">    </span><br><span class="line">    dispatch_queue_t queue = dispatch_queue_create(&quot;com.jiwuchao.www&quot;, DISPATCH_QUEUE_CONCURRENT);</span><br><span class="line">    dispatch_queue_t queue1 = dispatch_queue_create(&quot;com.jiwuchao.www1&quot;, DISPATCH_QUEUE_CONCURRENT);</span><br><span class="line">    dispatch_queue_t queue2 = dispatch_queue_create(&quot;com.jiwuchao.www2&quot;, DISPATCH_QUEUE_CONCURRENT);</span><br><span class="line">    </span><br><span class="line">    dispatch_group_enter(group);</span><br><span class="line">    //任务1</span><br><span class="line">    dispatch_async(queue, ^&#123;</span><br><span class="line">        for (int i = 0; i &lt; 2; ++i) &#123;</span><br><span class="line">            [NSThread sleepForTimeInterval:2];</span><br><span class="line">            NSLog(@&quot;任务1---%@&quot;,[NSThread currentThread]);</span><br><span class="line">        &#125;</span><br><span class="line">        dispatch_group_leave(group);</span><br><span class="line">    &#125;);</span><br><span class="line">    //任务2</span><br><span class="line">    dispatch_group_enter(group);</span><br><span class="line">    dispatch_async(queue1, ^&#123;</span><br><span class="line">        </span><br><span class="line">        dispatch_queue_t queue4 =  dispatch_queue_create(&quot;wuchao.w&quot;, DISPATCH_QUEUE_CONCURRENT);</span><br><span class="line">        /*</span><br><span class="line">         如果dispatch_async 换成 dispatch_sync 则不会出现 上面的乱序问题y，因为并发队列 + 同步执行 并不能创建多个线程 所有任务2</span><br><span class="line">         的线程结束就是任务2及其子线程执行完的时机</span><br><span class="line">         */</span><br><span class="line">        dispatch_async(queue4, ^&#123;</span><br><span class="line">            // 子任务1</span><br><span class="line">            for (NSInteger i = 0; i &lt; 2; i++) &#123;</span><br><span class="line">                [NSThread sleepForTimeInterval:2];</span><br><span class="line">                NSLog(@&quot;任务2的-子任务1 - %@&quot;,[NSThread currentThread]);</span><br><span class="line">            &#125;</span><br><span class="line">            // 子任务2</span><br><span class="line">            for (NSInteger i = 0; i &lt; 2; i++) &#123;</span><br><span class="line">                [NSThread sleepForTimeInterval:2];</span><br><span class="line">                NSLog(@&quot;任务2的-子任务2 - %@&quot;,[NSThread currentThread]);</span><br><span class="line">            &#125;</span><br><span class="line">            // 子任务3</span><br><span class="line">            for (NSInteger i = 0; i &lt; 2; i++) &#123;</span><br><span class="line">                [NSThread sleepForTimeInterval:2];</span><br><span class="line">                NSLog(@&quot;任务2的-子任务3 - %@&quot;,[NSThread currentThread]);</span><br><span class="line">            &#125;</span><br><span class="line">            // 子任务1，2，3 是在同一个线程执行 当子任务1，2，3 执行完之后再leave 上层group 告诉nofify 这个任务2 已经完成了 才能正确完成同步 假如子任务中还有嵌套 那么还需要此种解决方法依次类推</span><br><span class="line">            dispatch_group_leave(group);</span><br><span class="line">        &#125;);</span><br><span class="line">        // 这一句放在这里是不行的</span><br><span class="line">//        dispatch_group_leave(group);</span><br><span class="line">    &#125;);</span><br><span class="line">    //任务3</span><br><span class="line">    dispatch_group_enter(group);</span><br><span class="line">    dispatch_async(queue2, ^&#123;</span><br><span class="line">        for (int i = 0; i &lt; 2; ++i) &#123;</span><br><span class="line">            [NSThread sleepForTimeInterval:2];</span><br><span class="line">            NSLog(@&quot;任务3---%@&quot;,[NSThread currentThread]);</span><br><span class="line">        &#125;</span><br><span class="line">        dispatch_group_leave(group);</span><br><span class="line">    &#125;);</span><br><span class="line">    </span><br><span class="line">    dispatch_group_notify(group, dispatch_get_main_queue(), ^&#123;</span><br><span class="line">        // 等前面的异步任务1、任务2都执行完毕后，回到主线程执行下边任务</span><br><span class="line">        NSLog(@&quot;前面的异步操作都执行完毕&quot;);</span><br><span class="line">        for (int i = 0; i &lt; 2; ++i) &#123;</span><br><span class="line">            [NSThread sleepForTimeInterval:2];</span><br><span class="line">            NSLog(@&quot;开始执行dispatch_group_notify ---%@&quot;,[NSThread currentThread]);</span><br><span class="line">        &#125;</span><br><span class="line">        NSLog(@&quot;group---end&quot;);</span><br><span class="line">    &#125;);</span><br><span class="line">    NSLog(@&quot;不会阻塞主线程-----&quot;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">输出:</span><br><span class="line"></span><br><span class="line">currentThread---&lt;NSThread: 0x60000094d380&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">group---begin</span><br><span class="line">不会阻塞主线程-----</span><br><span class="line">任务1---&lt;NSThread: 0x60000091aec0&gt;&#123;number = 4, name = (null)&#125;</span><br><span class="line">任务2的-子任务1 - &lt;NSThread: 0x6000009e7a80&gt;&#123;number = 7, name = (null)&#125;</span><br><span class="line">任务3---&lt;NSThread: 0x600000928300&gt;&#123;number = 8, name = (null)&#125;</span><br><span class="line">任务1---&lt;NSThread: 0x60000091aec0&gt;&#123;number = 4, name = (null)&#125;</span><br><span class="line">任务2的-子任务1 - &lt;NSThread: 0x6000009e7a80&gt;&#123;number = 7, name = (null)&#125;</span><br><span class="line">任务3---&lt;NSThread: 0x600000928300&gt;&#123;number = 8, name = (null)&#125;</span><br><span class="line">任务2的-子任务2 - &lt;NSThread: 0x6000009e7a80&gt;&#123;number = 7, name = (null)&#125;</span><br><span class="line">任务2的-子任务2 - &lt;NSThread: 0x6000009e7a80&gt;&#123;number = 7, name = (null)&#125;</span><br><span class="line">任务2的-子任务3 - &lt;NSThread: 0x6000009e7a80&gt;&#123;number = 7, name = (null)&#125;</span><br><span class="line">任务2的-子任务3 - &lt;NSThread: 0x6000009e7a80&gt;&#123;number = 7, name = (null)&#125;</span><br><span class="line">前面的异步操作都执行完毕</span><br><span class="line">开始执行dispatch_group_notify ---&lt;NSThread: 0x60000094d380&gt;&#123;number = 1, name =</span><br><span class="line">开始执行dispatch_group_notify ---&lt;NSThread: 0x60000094d380&gt;&#123;number = 1, name =</span><br><span class="line">group---end</span><br></pre></td></tr></table></figure>
+<p>结论：从输出接果可以看到输出结果符合预期。综合上述原因，用 <strong>dispatch_group_leave(group)</strong>  当任务2 的子任务的线程执行完之后才标识任务2执行完，才会触发 dispatch_group_notify 而不是当任务2线程执行完就触发dispatch_group_notify。</p>
+<h5 id="解决方法2-dispatch-semaphore-t-信号量"><a href="#解决方法2-dispatch-semaphore-t-信号量" class="headerlink" title="解决方法2 dispatch_semaphore_t 信号量"></a>解决方法2 dispatch_semaphore_t 信号量</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line">- (void)dispathcGroupAnswer2 &#123;</span><br><span class="line">    NSLog(@&quot;currentThread---%@&quot;,[NSThread currentThread]);</span><br><span class="line">    NSLog(@&quot;group---begin&quot;);</span><br><span class="line">    dispatch_group_t group = dispatch_group_create();</span><br><span class="line">    </span><br><span class="line">    dispatch_queue_t queue = dispatch_queue_create(&quot;com.jiwuchao.www&quot;, DISPATCH_QUEUE_CONCURRENT);</span><br><span class="line">    dispatch_queue_t queue1 = dispatch_queue_create(&quot;com.jiwuchao.www1&quot;, DISPATCH_QUEUE_CONCURRENT);</span><br><span class="line">    dispatch_queue_t queue2 = dispatch_queue_create(&quot;com.jiwuchao.www2&quot;, DISPATCH_QUEUE_CONCURRENT);</span><br><span class="line">    //任务1</span><br><span class="line">    dispatch_group_async(group, queue, ^&#123;</span><br><span class="line">        for (int i = 0; i &lt; 2; ++i) &#123;</span><br><span class="line">            [NSThread sleepForTimeInterval:2];</span><br><span class="line">            NSLog(@&quot;任务1---%@&quot;,[NSThread currentThread]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    // 任务2</span><br><span class="line">    dispatch_group_async(group, queue1, ^&#123;</span><br><span class="line">        dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);</span><br><span class="line">        dispatch_queue_t queue4 =  dispatch_queue_create(&quot;wuchao.w&quot;, DISPATCH_QUEUE_CONCURRENT);</span><br><span class="line">        /*</span><br><span class="line">         如果dispatch_async 换成 dispatch_sync 则不会出现 上面的乱序问题y，因为并发队列 + 同步执行 并不能创建多个线程 所有任务2</span><br><span class="line">         的线程结束就是任务2及其子线程执行完的时机</span><br><span class="line">         */</span><br><span class="line">        </span><br><span class="line">        dispatch_async(queue4, ^&#123;</span><br><span class="line">            // 子任务1</span><br><span class="line">            for (NSInteger i = 0; i &lt; 2; i++) &#123;</span><br><span class="line">                [NSThread sleepForTimeInterval:2];</span><br><span class="line">                NSLog(@&quot;任务2的-子任务1 - %@&quot;,[NSThread currentThread]);</span><br><span class="line">            &#125;</span><br><span class="line">            // 子任务2</span><br><span class="line">            for (NSInteger i = 0; i &lt; 2; i++) &#123;</span><br><span class="line">                [NSThread sleepForTimeInterval:2];</span><br><span class="line">                NSLog(@&quot;任务2的-子任务2 - %@&quot;,[NSThread currentThread]);</span><br><span class="line">            &#125;</span><br><span class="line">            // 子任务3</span><br><span class="line">            for (NSInteger i = 0; i &lt; 2; i++) &#123;</span><br><span class="line">                [NSThread sleepForTimeInterval:2];</span><br><span class="line">                NSLog(@&quot;任务2的-子任务3 - %@&quot;,[NSThread currentThread]);</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            </span><br><span class="line">            // 信号量加  1</span><br><span class="line">            dispatch_semaphore_signal(semaphore);</span><br><span class="line">            </span><br><span class="line">        &#125;);</span><br><span class="line">        </span><br><span class="line">        //  信号量 -1 </span><br><span class="line">        dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW, (int64_t)(15 * NSEC_PER_SEC)));</span><br><span class="line">    &#125;);</span><br><span class="line">    //任务3</span><br><span class="line">    dispatch_group_async(group, queue2, ^&#123;</span><br><span class="line">        for (int i = 0; i &lt; 2; ++i) &#123;</span><br><span class="line">            [NSThread sleepForTimeInterval:2];</span><br><span class="line">            NSLog(@&quot;任务3---%@&quot;,[NSThread currentThread]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    </span><br><span class="line">    dispatch_group_notify(group, dispatch_get_main_queue(), ^&#123;</span><br><span class="line">        // 等前面的异步任务1、任务2都执行完毕后，回到主线程执行下边任务</span><br><span class="line">        NSLog(@&quot;前面的异步操作都执行完毕&quot;);</span><br><span class="line">        for (int i = 0; i &lt; 2; ++i) &#123;</span><br><span class="line">            [NSThread sleepForTimeInterval:2];</span><br><span class="line">            NSLog(@&quot;开始执行dispatch_group_notify ---%@&quot;,[NSThread currentThread]);</span><br><span class="line">        &#125;</span><br><span class="line">        NSLog(@&quot;group---end&quot;);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">打印</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">currentThread---&lt;NSThread: 0x600002332a00&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">group---begin</span><br><span class="line">任务3---&lt;NSThread: 0x600002343580&gt;&#123;number = 8, name = (null)&#125;</span><br><span class="line">任务1---&lt;NSThread: 0x6000023435c0&gt;&#123;number = 9, name = (null)&#125;</span><br><span class="line">任务2的-子任务1 - &lt;NSThread: 0x6000023591c0&gt;&#123;number = 4, name = (null)&#125;</span><br><span class="line">任务3---&lt;NSThread: 0x600002343580&gt;&#123;number = 8, name = (null)&#125;</span><br><span class="line">任务2的-子任务1 - &lt;NSThread: 0x6000023591c0&gt;&#123;number = 4, name = (null)&#125;</span><br><span class="line">任务1---&lt;NSThread: 0x6000023435c0&gt;&#123;number = 9, name = (null)&#125;</span><br><span class="line">任务2的-子任务2 - &lt;NSThread: 0x6000023591c0&gt;&#123;number = 4, name = (null)&#125;</span><br><span class="line">任务2的-子任务2 - &lt;NSThread: 0x6000023591c0&gt;&#123;number = 4, name = (null)&#125;</span><br><span class="line">任务2的-子任务3 - &lt;NSThread: 0x6000023591c0&gt;&#123;number = 4, name = (null)&#125;</span><br><span class="line">任务2的-子任务3 - &lt;NSThread: 0x6000023591c0&gt;&#123;number = 4, name = (null)&#125;</span><br><span class="line">前面的异步操作都执行完毕</span><br><span class="line">开始执行dispatch_group_notify ---&lt;NSThread: 0x600002332a00&gt;&#123;number = 1, name = m</span><br><span class="line">开始执行dispatch_group_notify ---&lt;NSThread: 0x600002332a00&gt;&#123;number = 1, name = m</span><br><span class="line">group---end</span><br></pre></td></tr></table></figure>
+<p><strong>结论：</strong></p>
+<p>&emsp;输出结果符合预期。和dispatch_group_enter 和 dispatch_group_leave 作用一样。因为信号量初始化为0 ，当任务2 的子线程执行完成之后会执行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">//信号量加  1</span><br><span class="line">dispatch_semaphore_signal(semaphore);</span><br></pre></td></tr></table></figure>
+<p>使信号量加一操作，那么当走到</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">信号量加1 此方法的作用是，可以使总信号量减1，当信号总量为0时，再减一就小于0了，就会一直等待（阻塞所在线程），否则就可以正常执行。</span><br><span class="line"></span><br><span class="line"> dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW, (int64_t)(15 * NSEC_PER_SEC)));</span><br></pre></td></tr></table></figure>
+<p>这一句时，因为此时信号量等于1 ，那么不会阻塞当前(任务2)线程，那么任务2算是完成。假如任务2的子任务没有完成就不会走到 <strong> dispatch_semaphore_signal(semaphore) </strong> 这个方法，信号量仍然为0，会一直阻塞注任务2的线程。</p>
+<h3 id="dispatch-barrier-async-和-dispatch-barrier-sync-栅栏函数"><a href="#dispatch-barrier-async-和-dispatch-barrier-sync-栅栏函数" class="headerlink" title="dispatch_barrier_async 和 dispatch_barrier_sync 栅栏函数"></a>dispatch_barrier_async 和 dispatch_barrier_sync 栅栏函数</h3><h4 id="dispatch-barrier-async"><a href="#dispatch-barrier-async" class="headerlink" title="dispatch_barrier_async"></a>dispatch_barrier_async</h4><blockquote>
+<p>dispatch_barrier_async的作用是等待队列的前面的任务执行完毕后，才执行dispatch_barrier_async的block里面的任务,不会阻塞当前线程；</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">- (void)barrierAsync &#123;</span><br><span class="line">    // 创建一个并发队列</span><br><span class="line">    dispatch_queue_t queue = dispatch_queue_create(&quot;com.jiwuchao.barrierAsync&quot;, DISPATCH_QUEUE_CONCURRENT);</span><br><span class="line">    dispatch_async(queue, ^&#123;</span><br><span class="line">        for (NSInteger i = 0; i &lt; 2; i++) &#123;</span><br><span class="line">            [NSThread sleepForTimeInterval:1];</span><br><span class="line">            NSLog(@&quot;1 - %@&quot;,[NSThread currentThread]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    dispatch_async(queue, ^&#123;</span><br><span class="line">        for (NSInteger i = 0; i &lt; 2; i++) &#123;</span><br><span class="line">            [NSThread sleepForTimeInterval:1];</span><br><span class="line">            NSLog(@&quot;2 - %@&quot;,[NSThread currentThread]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    </span><br><span class="line">    dispatch_barrier_async(queue, ^&#123;</span><br><span class="line">        for (NSInteger i = 0; i &lt; 2; i++) &#123;</span><br><span class="line">            [NSThread sleepForTimeInterval:1];</span><br><span class="line">            NSLog(@&quot;i %ld dispatch_barrier_async 任务&quot;,i);</span><br><span class="line">        &#125;</span><br><span class="line">        [NSThread sleepForTimeInterval:5];</span><br><span class="line">    &#125;);</span><br><span class="line">    </span><br><span class="line">    dispatch_async(queue, ^&#123;</span><br><span class="line">        for (NSInteger i = 0; i &lt; 2; i++) &#123;</span><br><span class="line">            [NSThread sleepForTimeInterval:1];</span><br><span class="line">            NSLog(@&quot;3 - %@&quot;,[NSThread currentThread]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    dispatch_async(queue, ^&#123;</span><br><span class="line">        for (NSInteger i = 0; i &lt; 2; i++) &#123;</span><br><span class="line">            [NSThread sleepForTimeInterval:1];</span><br><span class="line">            NSLog(@&quot;4 - %@&quot;,[NSThread currentThread]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    NSLog(@&quot;当前线程阻塞住了吗？没有&quot;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">打印:</span><br><span class="line"></span><br><span class="line">2 - &lt;NSThread: 0x600002ac0ec0&gt;&#123;number = 4, name = (null)&#125;</span><br><span class="line">1 - &lt;NSThread: 0x600002a242c0&gt;&#123;number = 5, name = (null)&#125;</span><br><span class="line">1 - &lt;NSThread: 0x600002a242c0&gt;&#123;number = 5, name = (null)&#125;</span><br><span class="line">2 - &lt;NSThread: 0x600002ac0ec0&gt;&#123;number = 4, name = (null)&#125;</span><br><span class="line">i 0 dispatch_barrier_async 任务</span><br><span class="line">i 1 dispatch_barrier_async 任务</span><br><span class="line">3 - &lt;NSThread: 0x600002ac0ec0&gt;&#123;number = 4, name = (null)&#125;</span><br><span class="line">4 - &lt;NSThread: 0x600002ae3ec0&gt;&#123;number = 3, name = (null)&#125;</span><br><span class="line">4 - &lt;NSThread: 0x600002ae3ec0&gt;&#123;number = 3, name = (null)&#125;</span><br><span class="line">3 - &lt;NSThread: 0x600002ac0ec0&gt;&#123;number = 4, name = (null)&#125;</span><br></pre></td></tr></table></figure>
+<p>结论 ：</p>
+<ol>
+<li>dispatch_barrier_async 不会阻塞当前线程</li>
+<li>dispatch_barrier_async 会等到前面的任务执行完之后再执行后面的任务</li>
+</ol>
+<h4 id="dispatch-barrier-sync"><a href="#dispatch-barrier-sync" class="headerlink" title="dispatch_barrier_sync"></a>dispatch_barrier_sync</h4><blockquote>
+<p>dispatch_barrier_sync的作用是等待队列的前面的任务执行完毕后，才执行dispatch_barrier_async的block里面的任务,阻塞当前线程</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line">- (void)barrierSync &#123;</span><br><span class="line">    // 创建一个并发队列</span><br><span class="line">    dispatch_queue_t queue = dispatch_queue_create(&quot;com.jiwuchao.barrierAsync&quot;, DISPATCH_QUEUE_CONCURRENT);</span><br><span class="line">    </span><br><span class="line">    dispatch_async(queue, ^&#123;</span><br><span class="line">        for (NSInteger i = 0; i &lt; 2; i++) &#123;</span><br><span class="line">            [NSThread sleepForTimeInterval:1];</span><br><span class="line">            NSLog(@&quot;1 - %@&quot;,[NSThread currentThread]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    dispatch_async(queue, ^&#123;</span><br><span class="line">        for (NSInteger i = 0; i &lt; 2; i++) &#123;</span><br><span class="line">            [NSThread sleepForTimeInterval:1];</span><br><span class="line">            NSLog(@&quot;2 - %@&quot;,[NSThread currentThread]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">  </span><br><span class="line">    dispatch_barrier_sync(queue, ^&#123;</span><br><span class="line">        </span><br><span class="line">        for (NSInteger i = 0; i &lt; 2; i++) &#123;</span><br><span class="line">            [NSThread sleepForTimeInterval:1];</span><br><span class="line">            NSLog(@&quot;i %ld dispatch_barrier_sync 任务&quot;,i);</span><br><span class="line">        &#125;</span><br><span class="line">        [NSThread sleepForTimeInterval:5];</span><br><span class="line">    &#125;);</span><br><span class="line">    </span><br><span class="line">    dispatch_async(queue, ^&#123;</span><br><span class="line">        for (NSInteger i = 0; i &lt; 2; i++) &#123;</span><br><span class="line">            [NSThread sleepForTimeInterval:1];</span><br><span class="line">            NSLog(@&quot;3 - %@&quot;,[NSThread currentThread]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    dispatch_async(queue, ^&#123;</span><br><span class="line">        for (NSInteger i = 0; i &lt; 2; i++) &#123;</span><br><span class="line">            [NSThread sleepForTimeInterval:1];</span><br><span class="line">            NSLog(@&quot;4 - %@&quot;,[NSThread currentThread]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    NSLog(@&quot;当前线程阻塞住了吗？阻塞住了&quot;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">打印:</span><br><span class="line"></span><br><span class="line">2 - &lt;NSThread: 0x60000346c4c0&gt;&#123;number = 5, name = (null)&#125;</span><br><span class="line">1 - &lt;NSThread: 0x60000349f880&gt;&#123;number = 4, name = (null)&#125;</span><br><span class="line">1 - &lt;NSThread: 0x60000349f880&gt;&#123;number = 4, name = (null)&#125;</span><br><span class="line">2 - &lt;NSThread: 0x60000346c4c0&gt;&#123;number = 5, name = (null)&#125;</span><br><span class="line">i 0 dispatch_barrier_sync 任务</span><br><span class="line">i 1 dispatch_barrier_sync 任务</span><br><span class="line">当前线程阻塞住了吗？阻塞住了</span><br><span class="line">4 - &lt;NSThread: 0x60000345db80&gt;&#123;number = 10, name = (null)&#125;</span><br><span class="line">3 - &lt;NSThread: 0x60000345dc00&gt;&#123;number = 9, name = (null)&#125;</span><br><span class="line">3 - &lt;NSThread: 0x60000345dc00&gt;&#123;number = 9, name = (null)&#125;</span><br><span class="line">4 - &lt;NSThread: 0x60000345db80&gt;&#123;number = 10, name = (null)&#125;</span><br></pre></td></tr></table></figure>
+<p>“ <strong>当前线程阻塞住了吗？阻塞住了</strong> “ 在当前线程中的输出 等到dispatch_barrier_sync 执行之后才执行</p>
+<p>结论：</p>
+<ol>
+<li>dispatch_barrier_sync 会阻塞当前线程（主线程/非主线程）</li>
+<li>dispatch_barrier_sync会等到前面的任务执行完之后再执行后面的任务</li>
+</ol>
+<h4 id="问题描述-为什么没有等待-dispatch-barrier-async-之前的任务执行完就开始执行-dispatch-barrier-async-的block任务？？"><a href="#问题描述-为什么没有等待-dispatch-barrier-async-之前的任务执行完就开始执行-dispatch-barrier-async-的block任务？？" class="headerlink" title="问题描述:为什么没有等待  dispatch_barrier_async 之前的任务执行完就开始执行 dispatch_barrier_async 的block任务？？"></a>问题描述:为什么没有等待  dispatch_barrier_async 之前的任务执行完就开始执行 dispatch_barrier_async 的block任务？？</h4><p>&emsp; 上述情况会在dispatch_barrier_async 出现，在dispatch_barrier_sync不会出现。</p>
+<p>代码如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br></pre></td><td class="code"><pre><span class="line"> </span><br><span class="line">- (void)barrierAsynQuestion &#123;</span><br><span class="line">        NSLog(@&quot;1 current thread -%@&quot;,[NSThread currentThread]);</span><br><span class="line">        // 创建一个并发队列</span><br><span class="line">        dispatch_queue_t queue = dispatch_queue_create(&quot;com.jiwuchao.barrierAsync&quot;, DISPATCH_QUEUE_CONCURRENT);</span><br><span class="line">    </span><br><span class="line">        //任务1</span><br><span class="line">        dispatch_async(queue, ^&#123;</span><br><span class="line">            for (NSInteger i = 0; i &lt; 2; i++) &#123;</span><br><span class="line">                [NSThread sleepForTimeInterval:1];</span><br><span class="line">                NSLog(@&quot;任务1 - %@&quot;,[NSThread currentThread]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        //任务2</span><br><span class="line">        dispatch_async(queue, ^&#123;</span><br><span class="line">            NSLog(@&quot;任务2 current thread -%@&quot;,[NSThread currentThread]);</span><br><span class="line">            /*</span><br><span class="line">             第一种情况 会开启新线程</span><br><span class="line">             */</span><br><span class="line">//            // 1 和 dispatch_async(queue, ^&#123;&#125; 是不是同一个线程 重新开启一个线程 异步 执行完之后回调</span><br><span class="line">//            [Download downloadData:^(BOOL success) &#123;</span><br><span class="line">//                NSLog(@&quot;正在执行下载完成之后的任务&quot;);</span><br><span class="line">//                [NSThread sleepForTimeInterval:3];</span><br><span class="line">//                NSLog(@&quot;下载完成之后的任务完成&quot;);</span><br><span class="line">//            &#125;];</span><br><span class="line">            </span><br><span class="line">            /*</span><br><span class="line">                第二种情况 如果是单个任务 不会开启新线程 如果是多个子任务则会开启线程</span><br><span class="line">             */</span><br><span class="line">            </span><br><span class="line">            dispatch_queue_t queue2 = dispatch_queue_create(&quot;com.wuchaoji.http&quot;, DISPATCH_QUEUE_CONCURRENT);</span><br><span class="line">            </span><br><span class="line">            dispatch_async(queue2, ^&#123;</span><br><span class="line">                NSLog(@&quot;3 current thread -%@&quot;,[NSThread currentThread]);</span><br><span class="line">                // 子任务1</span><br><span class="line">                for (NSInteger i = 0; i &lt; 2; i++) &#123;</span><br><span class="line">                    [NSThread sleepForTimeInterval:1];</span><br><span class="line">                    NSLog(@&quot;子任务1 - %@&quot;,[NSThread currentThread]);</span><br><span class="line">                &#125;</span><br><span class="line">                // 子任务2</span><br><span class="line">                for (NSInteger i = 0; i &lt; 2; i++) &#123;</span><br><span class="line">                    [NSThread sleepForTimeInterval:1];</span><br><span class="line">                    NSLog(@&quot;子任务2 - %@&quot;,[NSThread currentThread]);</span><br><span class="line">                &#125;</span><br><span class="line">                // 子任务3</span><br><span class="line">                for (NSInteger i = 0; i &lt; 2; i++) &#123;</span><br><span class="line">                    [NSThread sleepForTimeInterval:1];</span><br><span class="line">                    NSLog(@&quot;子任务3 - %@&quot;,[NSThread currentThread]);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">     </span><br><span class="line">        &#125;);</span><br><span class="line">    </span><br><span class="line">        dispatch_barrier_async(queue, ^&#123;</span><br><span class="line">            for (NSInteger i = 0; i &lt; 2; i++) &#123;</span><br><span class="line">                [NSThread sleepForTimeInterval:1];</span><br><span class="line">                NSLog(@&quot;i %ld dispatch_barrier_async 任务&quot;,i);</span><br><span class="line">            &#125;</span><br><span class="line">            [NSThread sleepForTimeInterval:5];</span><br><span class="line">        &#125;);</span><br><span class="line">        // 任务3</span><br><span class="line">        dispatch_async(queue, ^&#123;</span><br><span class="line">            for (NSInteger i = 0; i &lt; 2; i++) &#123;</span><br><span class="line">                [NSThread sleepForTimeInterval:1];</span><br><span class="line">                NSLog(@&quot;任务3 - %@&quot;,[NSThread currentThread]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        // 任务4</span><br><span class="line">        dispatch_async(queue, ^&#123;</span><br><span class="line">            for (NSInteger i = 0; i &lt; 2; i++) &#123;</span><br><span class="line">                [NSThread sleepForTimeInterval:1];</span><br><span class="line">                NSLog(@&quot;任务4 - %@&quot;,[NSThread currentThread]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">打印:</span><br><span class="line"></span><br><span class="line">1 current thread -&lt;NSThread: 0x6000036be740&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">任务2 current thread -&lt;NSThread: 0x6000036d1000&gt;&#123;number = 4, name = (null)&#125;</span><br><span class="line">3 current thread -&lt;NSThread: 0x600003633880&gt;&#123;number = 6, name = (null)&#125;</span><br><span class="line">任务1 - &lt;NSThread: 0x600003631280&gt;&#123;number = 5, name = (null)&#125;</span><br><span class="line">子任务1 - &lt;NSThread: 0x600003633880&gt;&#123;number = 6, name = (null)&#125;</span><br><span class="line">子任务1 - &lt;NSThread: 0x600003633880&gt;&#123;number = 6, name = (null)&#125;</span><br><span class="line">任务1 - &lt;NSThread: 0x600003631280&gt;&#123;number = 5, name = (null)&#125;</span><br><span class="line">子任务2 - &lt;NSThread: 0x600003633880&gt;&#123;number = 6, name = (null)&#125;</span><br><span class="line">i 0 dispatch_barrier_async 任务</span><br><span class="line">i 1 dispatch_barrier_async 任务</span><br><span class="line">子任务2 - &lt;NSThread: 0x600003633880&gt;&#123;number = 6, name = (null)&#125;</span><br><span class="line">子任务3 - &lt;NSThread: 0x600003633880&gt;&#123;number = 6, name = (null)&#125;</span><br><span class="line">子任务3 - &lt;NSThread: 0x600003633880&gt;&#123;number = 6, name = (null)&#125;</span><br><span class="line">任务3 - &lt;NSThread: 0x6000036e9380&gt;&#123;number = 3, name = (null)&#125;</span><br><span class="line">任务4 - &lt;NSThread: 0x600003633880&gt;&#123;number = 6, name = (null)&#125;</span><br><span class="line">任务3 - &lt;NSThread: 0x6000036e9380&gt;&#123;number = 3, name = (null)&#125;</span><br><span class="line">任务4 - &lt;NSThread: 0x600003633880&gt;&#123;number = 6, name = (null)&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="问题分析-和group-notify-类似"><a href="#问题分析-和group-notify-类似" class="headerlink" title="问题分析:和group_notify 类似"></a>问题分析:和group_notify 类似</h4><h5 id="情况1-在嵌套任务中有一个任务："><a href="#情况1-在嵌套任务中有一个任务：" class="headerlink" title="情况1 在嵌套任务中有一个任务："></a>情况1 在嵌套任务中有一个任务：</h5><blockquote>
+<p>在并发队列中有单个任务时不会开启新的线程，那么和当前线程(任务2)的线程是同一个线程，当前任务2执行完也就是其中子线程的任务执行完毕。</p>
+</blockquote>
+<h5 id="情况2-在嵌套任务中有多个任务："><a href="#情况2-在嵌套任务中有多个任务：" class="headerlink" title="情况2 在嵌套任务中有多个任务："></a>情况2 在嵌套任务中有多个任务：</h5><blockquote>
+<p>在并发队列中有多个任务就会开启多个线程异步执行，多个任务异步执行并不会阻塞任务2 的线程，那么任务2 线程执行完毕的标准是把其子任务全部提交到执行队列，那么此时dispatch_barrier_async 检测到 任务1 任务2 都已经完成就会执行dispatch_barrier_async 的任务，但是任务2 系统对完成的判断标准是把其子任务提交到执行队列，此线程的任务已经完成，但是此线程其他的线程它不负责<br>            所以会出现在看似 线程2还没有执行完就开始执行dispatch_barrier_async 的任务，<strong>貌似dispatch_barrier_async 没有起作用和一样</strong>。</p>
+</blockquote>
+<h4 id="问题解决：信号量"><a href="#问题解决：信号量" class="headerlink" title="问题解决：信号量"></a>问题解决：信号量</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- (void)barrierAsynAnswer &#123;</span><br><span class="line">    NSLog(@&quot;1 current thread -%@&quot;,[NSThread currentThread]);</span><br><span class="line">    // 创建一个并发队列</span><br><span class="line">    dispatch_queue_t queue = dispatch_queue_create(&quot;com.jiwuchao.barrierAsync&quot;, DISPATCH_QUEUE_CONCURRENT);</span><br><span class="line">    </span><br><span class="line">    //任务1</span><br><span class="line">    dispatch_async(queue, ^&#123;</span><br><span class="line">        for (NSInteger i = 0; i &lt; 2; i++) &#123;</span><br><span class="line">            [NSThread sleepForTimeInterval:1];</span><br><span class="line">            NSLog(@&quot;任务1 - %@&quot;,[NSThread currentThread]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    //任务2</span><br><span class="line">    dispatch_async(queue, ^&#123;</span><br><span class="line">        NSLog(@&quot;任务2 current thread -%@&quot;,[NSThread currentThread]);</span><br><span class="line">        /*</span><br><span class="line">         第一种情况 会开启新线程</span><br><span class="line">         */</span><br><span class="line">        //            // 1 和 dispatch_async(queue, ^&#123;&#125; 是不是同一个线程 重新开启一个线程 异步 执行完之后回调</span><br><span class="line">        //            [Download downloadData:^(BOOL success) &#123;</span><br><span class="line">        //                NSLog(@&quot;正在执行下载完成之后的任务&quot;);</span><br><span class="line">        //                [NSThread sleepForTimeInterval:3];</span><br><span class="line">        //                NSLog(@&quot;下载完成之后的任务完成&quot;);</span><br><span class="line">        //            &#125;];</span><br><span class="line">        </span><br><span class="line">        /*</span><br><span class="line">         第二种情况 如果是单个任务 不会开启新线程 如果是多个子任务则会开启线程</span><br><span class="line">         */</span><br><span class="line">        </span><br><span class="line">        dispatch_queue_t queue2 = dispatch_queue_create(&quot;com.wuchaoji.http&quot;, DISPATCH_QUEUE_CONCURRENT);</span><br><span class="line">        </span><br><span class="line">        dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);</span><br><span class="line">        </span><br><span class="line">        dispatch_async(queue2, ^&#123;</span><br><span class="line">            NSLog(@&quot;3 current thread -%@&quot;,[NSThread currentThread]);</span><br><span class="line">            // 子任务1</span><br><span class="line">            for (NSInteger i = 0; i &lt; 2; i++) &#123;</span><br><span class="line">                [NSThread sleepForTimeInterval:1];</span><br><span class="line">                NSLog(@&quot;子任务1 - %@&quot;,[NSThread currentThread]);</span><br><span class="line">            &#125;</span><br><span class="line">            // 子任务2</span><br><span class="line">            for (NSInteger i = 0; i &lt; 2; i++) &#123;</span><br><span class="line">                [NSThread sleepForTimeInterval:1];</span><br><span class="line">                NSLog(@&quot;子任务2 - %@&quot;,[NSThread currentThread]);</span><br><span class="line">            &#125;</span><br><span class="line">            // 子任务3</span><br><span class="line">            for (NSInteger i = 0; i &lt; 2; i++) &#123;</span><br><span class="line">                [NSThread sleepForTimeInterval:1];</span><br><span class="line">                NSLog(@&quot;子任务3 - %@&quot;,[NSThread currentThread]);</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            dispatch_semaphore_signal(semaphore);</span><br><span class="line">        &#125;);</span><br><span class="line">        // 信号量 等待 最多等待15秒</span><br><span class="line">        dispatch_semaphore_wait(semaphore,dispatch_time(DISPATCH_TIME_NOW, (int64_t)(15 * NSEC_PER_SEC)));</span><br><span class="line">        </span><br><span class="line">    &#125;);</span><br><span class="line">    </span><br><span class="line">    dispatch_barrier_async(queue, ^&#123;</span><br><span class="line">        for (NSInteger i = 0; i &lt; 2; i++) &#123;</span><br><span class="line">            [NSThread sleepForTimeInterval:1];</span><br><span class="line">            NSLog(@&quot;i %ld dispatch_barrier_async 任务&quot;,i);</span><br><span class="line">        &#125;</span><br><span class="line">        [NSThread sleepForTimeInterval:5];</span><br><span class="line">    &#125;);</span><br><span class="line">    // 任务3</span><br><span class="line">    dispatch_async(queue, ^&#123;</span><br><span class="line">        for (NSInteger i = 0; i &lt; 2; i++) &#123;</span><br><span class="line">            [NSThread sleepForTimeInterval:1];</span><br><span class="line">            NSLog(@&quot;任务3 - %@&quot;,[NSThread currentThread]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    // 任务4</span><br><span class="line">    dispatch_async(queue, ^&#123;</span><br><span class="line">        for (NSInteger i = 0; i &lt; 2; i++) &#123;</span><br><span class="line">            [NSThread sleepForTimeInterval:1];</span><br><span class="line">            NSLog(@&quot;任务4 - %@&quot;,[NSThread currentThread]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">打印:</span><br><span class="line"></span><br><span class="line">1 current thread -&lt;NSThread: 0x600001327680&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">任务2 current thread -&lt;NSThread: 0x60000136ec80&gt;&#123;number = 3, name = (null)&#125;</span><br><span class="line">3 current thread -&lt;NSThread: 0x6000013b1b80&gt;&#123;number = 5, name = (null)&#125;</span><br><span class="line">子任务1 - &lt;NSThread: 0x6000013b1b80&gt;&#123;number = 5, name = (null)&#125;</span><br><span class="line">任务1 - &lt;NSThread: 0x60000134f500&gt;&#123;number = 4, name = (null)&#125;</span><br><span class="line">子任务1 - &lt;NSThread: 0x6000013b1b80&gt;&#123;number = 5, name = (null)&#125;</span><br><span class="line">任务1 - &lt;NSThread: 0x60000134f500&gt;&#123;number = 4, name = (null)&#125;</span><br><span class="line">子任务2 - &lt;NSThread: 0x6000013b1b80&gt;&#123;number = 5, name = (null)&#125;</span><br><span class="line">子任务2 - &lt;NSThread: 0x6000013b1b80&gt;&#123;number = 5, name = (null)&#125;</span><br><span class="line">子任务3 - &lt;NSThread: 0x6000013b1b80&gt;&#123;number = 5, name = (null)&#125;</span><br><span class="line">子任务3 - &lt;NSThread: 0x6000013b1b80&gt;&#123;number = 5, name = (null)&#125;</span><br><span class="line">i 0 dispatch_barrier_async 任务</span><br><span class="line">i 1 dispatch_barrier_async 任务</span><br><span class="line">任务3 - &lt;NSThread: 0x60000136ec80&gt;&#123;number = 3, name = (null)&#125;</span><br><span class="line">任务4 - &lt;NSThread: 0x6000013819c0&gt;&#123;number = 6, name = (null)&#125;</span><br><span class="line">任务4 - &lt;NSThread: 0x6000013819c0&gt;&#123;number = 6, name = (null)&#125;</span><br><span class="line">任务3 - &lt;NSThread: 0x60000136ec80&gt;&#123;number = 3, name = (null)&#125;</span><br></pre></td></tr></table></figure>
+<p>结论：<br>&emsp;输出结果符合预期。因为:在任务2 开始执行的时候生成一个信号量，信号量为0 dispatch_semaphore_wait 会一直阻塞任务2线程，直到超出等待时间。直到任务2 的子任务执行完之后才dispatch_semaphore_signal 使信号量加一 这样dispatch_semaphore_wait 取消阻塞任务2线程</p>
+<h3 id="Dispatch-Semaphore-信号量"><a href="#Dispatch-Semaphore-信号量" class="headerlink" title="Dispatch Semaphore 信号量"></a>Dispatch Semaphore 信号量</h3><p>&emsp;GCD 中的信号量是指 Dispatch Semaphore，是持有计数的信号。类似于过高速路收费站的栏杆。可以通过时，打开栏杆，不可以通过时，关闭栏杆。在 Dispatch Semaphore 中，使用计数来完成这个功能，计数为0时等待，不可通过。计数为1或大于1时，计数减1且不等待，可通过。<br>Dispatch Semaphore 提供了三个函数。</p>
+<ol>
+<li>dispatch_semaphore_create：创建一个Semaphore并初始化信号的总量</li>
+<li>dispatch_semaphore_signal：发送一个信号，让信号总量加1</li>
+<li>dispatch_semaphore_wait：可以使总信号量减1，当信号总量为0时就会一直等待（阻塞所在线程），否则就可以正常执行。</li>
+</ol>
+<blockquote>
+<p>注意：信号量的使用前提是：想清楚你需要处理哪个线程等待（阻塞），又要哪个线程继续执行，然后使用信号量</p>
+</blockquote>
+<blockquote>
+<p>Dispatch Semaphore 在实际开发中主要用于：</p>
+</blockquote>
+<ol>
+<li>保持线程同步，将异步执行任务转换为同步执行任务</li>
+<li>保证线程安全，为线程加锁</li>
+</ol>
+<p>在此主要说下线程同步。</p>
+<p>&emsp; 有一个全局的变量 number 要求在其他线程异步执行完赋值操作之后再输出，输出的值是在其他线程所赋的值。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">- (void)synchronization &#123;</span><br><span class="line">    NSLog(@&quot;currentThread---%@&quot;,[NSThread currentThread]);  // 打印当前线程</span><br><span class="line">    NSLog(@&quot;semaphore---begin&quot;);</span><br><span class="line">    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);</span><br><span class="line">    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);</span><br><span class="line">    </span><br><span class="line">    __block int number = 0;</span><br><span class="line">    dispatch_async(queue, ^&#123;</span><br><span class="line">        [NSThread sleepForTimeInterval:2];</span><br><span class="line">        NSLog(@&quot;1---%@&quot;,[NSThread currentThread]);</span><br><span class="line">        number = 100;</span><br><span class="line">        dispatch_semaphore_signal(semaphore);</span><br><span class="line">    &#125;);</span><br><span class="line">    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);</span><br><span class="line">    NSLog(@&quot;semaphore---end,number = %d&quot;,number);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">打印:</span><br><span class="line"></span><br><span class="line">currentThread---&lt;NSThread: 0x600000d9a800&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">semaphore---begin</span><br><span class="line">1---&lt;NSThread: 0x600000d17f40&gt;&#123;number = 6, name = (null)&#125;</span><br><span class="line">semaphore---end,number = 100</span><br></pre></td></tr></table></figure>
+<p>结论: 在其他线程异步赋值的number 输出的值正确，如果没有用dispatch_semaphore 那么输出的值是 number的初始化的值 0. 这里dispatch_semaphore 的目的是让执行synchronization 方法的main 线程和执行为number赋值的子线程 保持同步。</p>
+<h3 id="线程同步总结"><a href="#线程同步总结" class="headerlink" title="线程同步总结"></a>线程同步总结</h3><h4 id="线程同步-Dispatch-Group-中dispatch-group-enter-和-dispatch-group-leave-以及dispatch-group-async-比较"><a href="#线程同步-Dispatch-Group-中dispatch-group-enter-和-dispatch-group-leave-以及dispatch-group-async-比较" class="headerlink" title="线程同步 Dispatch Group  中dispatch_group_enter 和 dispatch_group_leave 以及dispatch_group_async  比较"></a>线程同步 Dispatch Group  中dispatch_group_enter 和 dispatch_group_leave 以及dispatch_group_async  比较</h4><blockquote>
+<p>Dispatch Group 中有 dispatch_group_enter 和 dispatch_group_leave 以及dispatch_group_async<br>。dispatch_group_async<br>使用比较方便，但是不够灵活，稍微复杂一点的需求处理不是太容易。<br>dispatch_group_enter 和 dispatch_group_leave<br>使用没有dispatch_group_async<br>简单，但是比较灵活，如上面解决复杂的同步问题。</p>
+</blockquote>
+<h4 id="dispatch-semaphore-和-dispatch-group"><a href="#dispatch-semaphore-和-dispatch-group" class="headerlink" title="dispatch_semaphore 和 dispatch group"></a>dispatch_semaphore 和 dispatch group</h4><blockquote>
+<p>dispatch_semaphore 使用灵活，但是处理比较复杂的常见不太方便。最适合的是dispatch_semaphore 和 dispatch group  配合使用，才能灵活处理复杂场景。</p>
+</blockquote>
+<h3 id="结尾"><a href="#结尾" class="headerlink" title="结尾"></a>结尾</h3><p>&emsp; 线程同步，需要根据不同的场景选择不同的技术，同时也要注意使用过程中的问题。</p>
+<h3 id="附Demo"><a href="#附Demo" class="headerlink" title="附Demo"></a>附Demo</h3><p><a href="https://github.com/JiWuChao/OCKeyPoint/tree/master/Multithreading/GCD" target="_blank" rel="noopener">相关Demo这里点击</a> <a href="https://github.com/JiWuChao/OCKeyPoint/tree/master/Multithreading/GCD" target="_blank" rel="noopener">https://github.com/JiWuChao/OCKeyPoint/tree/master/Multithreading/GCD</a>  </p>
+
+      
+    </div>
+    
+    
+    
+
+
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创,您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/weixinPay.png" alt="老JI 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/zhifubao.jpeg" alt="老JI 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    老JI
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://www.wuchao.net.cn/2018/09/29/线程同步方法和问题已经解决方案/" title="线程同步方法和问题已经解决方案">http://www.wuchao.net.cn/2018/09/29/线程同步方法和问题已经解决方案/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/15/数据结构笔记—两个有序链表合并成一个有序链表/" rel="next" title="数据结构笔记—两个有序链表合并成一个有序链表">
+                <i class="fa fa-chevron-left"></i> 数据结构笔记—两个有序链表合并成一个有序链表
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      
+        <div id="gitment-container"></div>
+      
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.jpeg"
+                alt="老JI" />
+            
+              <p class="site-author-name" itemprop="name">老JI</p>
+              <p class="site-description motion-element" itemprop="description">iOS，swift ,OC</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/JiWuChao" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://juejin.im/user/5a30f4826fb9a0450e761ce7/posts" target="_blank" title="掘金">
+                      
+                        <i class="fa fa-fw fa-angle-double-down"></i>掘金</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.jianshu.com/u/ac986bb0e59a" target="_blank" title="简书">
+                      
+                        <i class="fa fa-fw fa-book"></i>简书</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/jiwuchao" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                推荐阅读
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://juejin.im/user/5a30f4826fb9a0450e761ce7/posts" title="掘金" target="_blank">掘金</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.jianshu.com/u/ac986bb0e59a" title="简书" target="_blank">简书</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Dispatch-Group-调度组"><span class="nav-number">1.</span> <span class="nav-text">Dispatch Group 调度组</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#dispatch-group-notify-正常情况"><span class="nav-number">1.1.</span> <span class="nav-text">dispatch_group_notify 正常情况</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#dispatch-group-notify-异常情况"><span class="nav-number">1.2.</span> <span class="nav-text">dispatch_group_notify 异常情况</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#问题描述："><span class="nav-number">1.3.</span> <span class="nav-text">问题描述：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#问题分析-为什么会出现这种情况？"><span class="nav-number">1.4.</span> <span class="nav-text">问题分析:为什么会出现这种情况？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#问题解决-方法-1，2"><span class="nav-number">1.5.</span> <span class="nav-text">问题解决:方法 1，2</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#解决方法1-dispatch-group-enter-和-dispatch-group-leave"><span class="nav-number">1.5.1.</span> <span class="nav-text">解决方法1  dispatch_group_enter 和 dispatch_group_leave</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#解决方法2-dispatch-semaphore-t-信号量"><span class="nav-number">1.5.2.</span> <span class="nav-text">解决方法2 dispatch_semaphore_t 信号量</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dispatch-barrier-async-和-dispatch-barrier-sync-栅栏函数"><span class="nav-number">2.</span> <span class="nav-text">dispatch_barrier_async 和 dispatch_barrier_sync 栅栏函数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#dispatch-barrier-async"><span class="nav-number">2.1.</span> <span class="nav-text">dispatch_barrier_async</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#dispatch-barrier-sync"><span class="nav-number">2.2.</span> <span class="nav-text">dispatch_barrier_sync</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#问题描述-为什么没有等待-dispatch-barrier-async-之前的任务执行完就开始执行-dispatch-barrier-async-的block任务？？"><span class="nav-number">2.3.</span> <span class="nav-text">问题描述:为什么没有等待  dispatch_barrier_async 之前的任务执行完就开始执行 dispatch_barrier_async 的block任务？？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#问题分析-和group-notify-类似"><span class="nav-number">2.4.</span> <span class="nav-text">问题分析:和group_notify 类似</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#情况1-在嵌套任务中有一个任务："><span class="nav-number">2.4.1.</span> <span class="nav-text">情况1 在嵌套任务中有一个任务：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#情况2-在嵌套任务中有多个任务："><span class="nav-number">2.4.2.</span> <span class="nav-text">情况2 在嵌套任务中有多个任务：</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#问题解决：信号量"><span class="nav-number">2.5.</span> <span class="nav-text">问题解决：信号量</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Dispatch-Semaphore-信号量"><span class="nav-number">3.</span> <span class="nav-text">Dispatch Semaphore 信号量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#线程同步总结"><span class="nav-number">4.</span> <span class="nav-text">线程同步总结</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#线程同步-Dispatch-Group-中dispatch-group-enter-和-dispatch-group-leave-以及dispatch-group-async-比较"><span class="nav-number">4.1.</span> <span class="nav-text">线程同步 Dispatch Group  中dispatch_group_enter 和 dispatch_group_leave 以及dispatch_group_async  比较</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#dispatch-semaphore-和-dispatch-group"><span class="nav-number">4.2.</span> <span class="nav-text">dispatch_semaphore 和 dispatch group</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结尾"><span class="nav-number">5.</span> <span class="nav-text">结尾</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#附Demo"><span class="nav-number">6.</span> <span class="nav-text">附Demo</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+<div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">老JI</span>
+
+<!--
+<div align="center"><a href="http://www.amazingcounters.com"><img border="0" src="http://cc.amazingcounters.com/counter.php?i=3226256&c=9679081" alt="AmazingCounters.com"></a></div>
+
+-->
+ 
+
+
+
+<!--
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+-->
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共31.3k字</span>
+</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: decodeURI(window.location.pathname),
+            owner: 'JiWuChao',
+            repo: 'gitment-comments',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: 'ce987592f7ef13af8edd42588207684653ec035e',
+            
+                client_id: '7e24944f66fd4b97c2d9'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("ISSeOYnPycBRQe8e8J3yt6Jr-gzGzoHsz", "1glg9tTCEinuLtl0rQzKKyVw");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
